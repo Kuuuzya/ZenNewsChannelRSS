@@ -76,21 +76,21 @@ class Zen_RSS_Admin
         register_setting('zen_rss_option_group', 'zen_rss_cache_duration', array('default' => 15));
 
         // News
-        register_setting('zen_rss_option_group', 'zen_rss_news_count', array('default' => 50));
-        register_setting('zen_rss_option_group', 'zen_rss_news_max_age', array('default' => 3));
-        register_setting('zen_rss_option_group', 'zen_rss_news_logo');
-        register_setting('zen_rss_option_group', 'zen_rss_news_logo_square');
-        register_setting('zen_rss_option_group', 'zen_rss_news_thumbnails', array('default' => true));
-        register_setting('zen_rss_option_group', 'zen_rss_news_remove_teaser');
-        register_setting('zen_rss_option_group', 'zen_rss_news_remove_shortcodes');
+        register_setting('zen_rss_option_group', 'zen_rss_news_count', array('default' => 50, 'sanitize_callback' => 'absint'));
+        register_setting('zen_rss_option_group', 'zen_rss_news_max_age', array('default' => 8, 'sanitize_callback' => 'absint'));
+        register_setting('zen_rss_option_group', 'zen_rss_news_logo', array('sanitize_callback' => 'esc_url_raw'));
+        register_setting('zen_rss_option_group', 'zen_rss_news_logo_square', array('sanitize_callback' => 'esc_url_raw'));
+        register_setting('zen_rss_option_group', 'zen_rss_news_thumbnails', array('default' => true, 'type' => 'boolean'));
+        register_setting('zen_rss_option_group', 'zen_rss_news_remove_teaser', array('type' => 'boolean'));
+        register_setting('zen_rss_option_group', 'zen_rss_news_remove_shortcodes', array('type' => 'boolean'));
 
         // Channel
-        register_setting('zen_rss_option_group', 'zen_rss_channel_count', array('default' => 50));
-        register_setting('zen_rss_option_group', 'zen_rss_channel_max_age', array('default' => 3));
-        register_setting('zen_rss_option_group', 'zen_rss_channel_thumbnails', array('default' => true));
-        register_setting('zen_rss_option_group', 'zen_rss_channel_fulltext', array('default' => true));
-        register_setting('zen_rss_option_group', 'zen_rss_channel_related');
-        register_setting('zen_rss_option_group', 'zen_rss_related_position', array('default' => 2));
-        register_setting('zen_rss_option_group', 'zen_rss_channel_remove_shortcodes');
+        register_setting('zen_rss_option_group', 'zen_rss_channel_count', array('default' => 50, 'sanitize_callback' => 'absint'));
+        register_setting('zen_rss_option_group', 'zen_rss_channel_max_age', array('default' => 3, 'sanitize_callback' => 'absint'));
+        register_setting('zen_rss_option_group', 'zen_rss_channel_thumbnails', array('default' => true, 'type' => 'boolean'));
+        register_setting('zen_rss_option_group', 'zen_rss_channel_fulltext', array('default' => true, 'type' => 'boolean'));
+        register_setting('zen_rss_option_group', 'zen_rss_channel_related', array('type' => 'boolean'));
+        register_setting('zen_rss_option_group', 'zen_rss_related_position', array('default' => 2, 'sanitize_callback' => 'absint'));
+        register_setting('zen_rss_option_group', 'zen_rss_channel_remove_shortcodes', array('type' => 'boolean'));
     }
 }

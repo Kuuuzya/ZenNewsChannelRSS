@@ -130,7 +130,7 @@
                 </th>
                 <td>
                     <input type="number" id="zen_rss_news_max_age" name="zen_rss_news_max_age"
-                        value="<?php echo esc_attr(get_option('zen_rss_news_max_age', 3)); ?>" min="1" max="8"
+                        value="<?php echo esc_attr(get_option('zen_rss_news_max_age', 8)); ?>" min="1" max="8"
                         class="small-text" />
                     <p class="description">
                         <?php _e('Only include posts from the last N days (1-8).', 'zen-news-channel-rss'); ?><br>
@@ -157,6 +157,7 @@
                 <th scope="row"><?php _e('Include Thumbnails', 'zen-news-channel-rss'); ?></th>
                 <td>
                     <label class="toggle-switch">
+                        <input type="hidden" name="zen_rss_news_thumbnails" value="0" />
                         <input type="checkbox" name="zen_rss_news_thumbnails" value="1" <?php checked(get_option('zen_rss_news_thumbnails', true), true); ?> />
                         <span class="toggle-slider"></span>
                     </label>
@@ -171,6 +172,7 @@
                 <th scope="row"><?php _e('Remove Teaser Paragraph', 'zen-news-channel-rss'); ?></th>
                 <td>
                     <label class="toggle-switch">
+                        <input type="hidden" name="zen_rss_news_remove_teaser" value="0" />
                         <input type="checkbox" name="zen_rss_news_remove_teaser" value="1" <?php checked(get_option('zen_rss_news_remove_teaser'), true); ?> />
                         <span class="toggle-slider"></span>
                     </label>
@@ -184,6 +186,7 @@
                 <th scope="row"><?php _e('Remove Shortcodes', 'zen-news-channel-rss'); ?></th>
                 <td>
                     <label class="toggle-switch">
+                        <input type="hidden" name="zen_rss_news_remove_shortcodes" value="0" />
                         <input type="checkbox" name="zen_rss_news_remove_shortcodes" value="1" <?php checked(get_option('zen_rss_news_remove_shortcodes'), true); ?> />
                         <span class="toggle-slider"></span>
                     </label>
@@ -250,6 +253,7 @@
                 <th scope="row"><?php _e('Include Thumbnails', 'zen-news-channel-rss'); ?></th>
                 <td>
                     <label class="toggle-switch">
+                        <input type="hidden" name="zen_rss_channel_thumbnails" value="0" />
                         <input type="checkbox" name="zen_rss_channel_thumbnails" value="1" <?php checked(get_option('zen_rss_channel_thumbnails', true), true); ?> />
                         <span class="toggle-slider"></span>
                     </label>
@@ -264,6 +268,7 @@
                 <th scope="row"><?php _e('Full Content (content:encoded)', 'zen-news-channel-rss'); ?></th>
                 <td>
                     <label class="toggle-switch">
+                        <input type="hidden" name="zen_rss_channel_fulltext" value="0" />
                         <input type="checkbox" name="zen_rss_channel_fulltext" value="1" <?php checked(get_option('zen_rss_channel_fulltext', true), true); ?> />
                         <span class="toggle-slider"></span>
                     </label>
@@ -278,6 +283,7 @@
                 <th scope="row"><?php _e('"Related Posts" Block', 'zen-news-channel-rss'); ?></th>
                 <td>
                     <label class="toggle-switch">
+                        <input type="hidden" name="zen_rss_channel_related" value="0" />
                         <input type="checkbox" name="zen_rss_channel_related" value="1" <?php checked(get_option('zen_rss_channel_related'), true); ?> />
                         <span class="toggle-slider"></span>
                     </label>
@@ -306,6 +312,7 @@
                 <th scope="row"><?php _e('Remove Shortcodes', 'zen-news-channel-rss'); ?></th>
                 <td>
                     <label class="toggle-switch">
+                        <input type="hidden" name="zen_rss_channel_remove_shortcodes" value="0" />
                         <input type="checkbox" name="zen_rss_channel_remove_shortcodes" value="1" <?php checked(get_option('zen_rss_channel_remove_shortcodes'), true); ?> />
                         <span class="toggle-slider"></span>
                     </label>
