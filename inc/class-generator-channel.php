@@ -9,6 +9,17 @@ class Zen_RSS_Generator_Channel
             return;
         }
 
+        // Check cache first
+        $cached = Zen_RSS_Cache_Manager::get_cached_feed('channel');
+        if ($cached !== false) {
+            header('Content-Type: application/rss+xml; charset=' . get_option('blog_charset'), true);
+            echo $cached;
+            return;
+        }
+
+        // Start output buffering for caching
+        ob_start();
+
         header('Content-Type: application/rss+xml; charset=' . get_option('blog_charset'), true);
         echo '<?xml version="1.0" encoding="' . get_option('blog_charset') . '"?' . '>';
         ?>
@@ -22,13 +33,17 @@ class Zen_RSS_Generator_Channel
                 <language>ru</language>
 
                 <?php
+                // Default to 3 days for Channel (can be overridden by user)
+                $default_age = 3;
+                $user_age = (int) get_option('zen_rss_channel_max_age', $default_age);
+
                 $args = array(
                     'post_type' => 'post',
                     'post_status' => 'publish',
                     'posts_per_page' => get_option('zen_rss_channel_count', 50),
                     'date_query' => array(
                         array(
-                            'after' => get_option('zen_rss_channel_max_age', 30) . ' days ago',
+                            'after' => $user_age . ' days ago',
                         ),
                     ),
                 );
@@ -54,10 +69,20 @@ class Zen_RSS_Generator_Channel
                     $content_raw = get_the_content();
                     $content_clean = Zen_RSS_Text_Cleaner::clean_for_channel($content_raw);
 
+                    // Convert AVIF/WebP images to JPEG in content
+                    $content_clean = self::convert_images_to_jpeg($content_clean);
+
+                    // Simplify figure markup
+                    $content_clean = self::simplify_figures($content_clean);
+
                     // Inject Related Posts
                     if (get_option('zen_rss_channel_related')) {
                         $content_clean = Zen_RSS_Block_Related::inject_related($content_clean, $post_id);
                     }
+
+                    // Add source attribution at the end
+                    $site_name = get_bloginfo('name');
+                    $content_clean .= PHP_EOL . '<p><strong>Источник:</strong> <a href="' . esc_url($link) . '">' . esc_html($site_name) . '</a></p>';
 
                     // Image Logic (Strict JPEG/PNG, OG priority)
                     $image_data = self::get_best_image($post_id, $content_raw);
@@ -92,6 +117,54 @@ class Zen_RSS_Generator_Channel
             </channel>
         </rss>
         <?php
+
+        // Cache the output
+        $output = ob_get_clean();
+        Zen_RSS_Cache_Manager::set_cached_feed('channel', $output);
+        echo $output;
+    }
+
+    /**
+     * Convert AVIF/WebP images to JPEG in content
+     *
+     * @param string $content
+     * @return string
+     */
+    private static function convert_images_to_jpeg($content)
+    {
+        // Replace .avif and .webp with .jpg in src attributes
+        $content = preg_replace('/(<img[^>]+src=["\'])([^"\']+\.(avif|webp))(["\'][^>]*>)/i', '$1' . '$2' . '$4', $content);
+        $content = preg_replace('/\.(avif|webp)(["\'][^>]*>)/i', '.jpg$2', $content);
+
+        // Replace in href attributes
+        $content = preg_replace('/(<a[^>]+href=["\'])([^"\']+\.(avif|webp))(["\'][^>]*>)/i', '$1' . '$2' . '$4', $content);
+        $content = preg_replace('/(<a[^>]+href=["\'][^"\']+)\.(avif|webp)(["\'])/i', '$1.jpg$3', $content);
+
+        return $content;
+    }
+
+    /**
+     * Simplify figure markup for Zen compatibility
+     *
+     * @param string $content
+     * @return string
+     */
+    private static function simplify_figures($content)
+    {
+        // Remove figure classes (wp-block-*, size-*, etc.)
+        $content = preg_replace('/<figure[^>]+class="[^"]*"([^>]*)>/i', '<figure$1>', $content);
+
+        // Remove nested figures (flatten them)
+        $content = preg_replace('/<figure[^>]*>\s*<figure[^>]*>/i', '<figure>', $content);
+        $content = preg_replace('/<\/figure>\s*<\/figure>/i', '</figure>', $content);
+
+        // Remove anchor wrapping around images inside figures
+        $content = preg_replace('/<figure>(\s*)<a[^>]*>(\s*<img[^>]*>)\s*<\/a>/i', '<figure>$1$2', $content);
+
+        // Clean up any remaining wp-* classes in img tags
+        $content = preg_replace('/(<img[^>]+)class="[^"]*wp-[^"]*"([^>]*>)/i', '$1$2', $content);
+
+        return $content;
     }
 
     /**

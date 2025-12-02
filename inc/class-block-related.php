@@ -60,12 +60,15 @@ class Zen_RSS_Block_Related
             return $content;
         }
 
+        // Get configurable position (default: 2)
+        $position = max(1, (int) get_option('zen_rss_related_position', 2));
+
         // Try to split by paragraphs
         // Using a more robust regex split to handle various p tag attributes or spacing
         $paragraphs = preg_split('/(<\/p>)/i', $content, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
 
         // $paragraphs array will look like: [0] => "Text...", [1] => "</p>", [2] => "Text...", [3] => "</p>"
-        // We want to insert after the 2nd paragraph (so after index 3: p1, /p1, p2, /p2)
+        // We want to insert after the Nth paragraph (so after index 2N-1)
 
         $count = 0;
         $inserted = false;
@@ -75,14 +78,14 @@ class Zen_RSS_Block_Related
             $new_content .= $chunk;
             if (strtolower($chunk) === '</p>') {
                 $count++;
-                if ($count === 2) {
+                if ($count === $position) {
                     $new_content .= $related_html;
                     $inserted = true;
                 }
             }
         }
 
-        // If we couldn't insert (e.g. less than 2 paragraphs), append to the end
+        // If we couldn't insert (e.g. less paragraphs than position), append to the end
         if (!$inserted) {
             $new_content .= $related_html;
         }

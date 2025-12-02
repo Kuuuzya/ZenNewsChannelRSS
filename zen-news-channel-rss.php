@@ -2,9 +2,10 @@
 /**
  * Plugin Name: Zen News&Channel RSS
  * Description: Generates two independent RSS feeds for Yandex Zen (News and Channel) with a comprehensive admin interface.
- * Version: 1.0.2
+ * Version: 1.1.0
  * Author: Sergey Kuznetsov (Kuuuzya)
  * Text Domain: zen-news-channel-rss
+ * Domain Path: /languages
  */
 
 if (!defined('ABSPATH')) {
@@ -13,15 +14,22 @@ if (!defined('ABSPATH')) {
 
 define('ZEN_RSS_PATH', plugin_dir_path(__FILE__));
 define('ZEN_RSS_URL', plugin_dir_url(__FILE__));
-define('ZEN_RSS_VERSION', '1.0.2');
+define('ZEN_RSS_VERSION', '1.1.0');
+
+// Load text domain for i18n
+add_action('plugins_loaded', 'zen_rss_load_textdomain');
+function zen_rss_load_textdomain()
+{
+    load_plugin_textdomain('zen-news-channel-rss', false, dirname(plugin_basename(__FILE__)) . '/languages');
+}
 
 // Include required files
 require_once ZEN_RSS_PATH . 'admin/settings-page.php';
+require_once ZEN_RSS_PATH . 'inc/class-cache-manager.php';
 require_once ZEN_RSS_PATH . 'inc/class-text-cleaner.php';
 require_once ZEN_RSS_PATH . 'inc/class-block-related.php';
 require_once ZEN_RSS_PATH . 'inc/class-generator-news.php';
 require_once ZEN_RSS_PATH . 'inc/class-generator-channel.php';
-require_once ZEN_RSS_PATH . 'inc/api-yandex-webmaster.php';
 
 /**
  * Activation hook: Flush rewrite rules

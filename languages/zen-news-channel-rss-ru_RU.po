@@ -1,0 +1,136 @@
+# Russian Translation for Zen News&Channel RSS
+msgid ""
+msgstr ""
+"Project-Id-Version: Zen News&Channel RSS 1.1.0\n"
+"POT-Creation-Date: 2025-12-02 11:00+0000\n"
+"PO-Revision-Date: 2025-12-02 11:00+0000\n"
+"Last-Translator: \n"
+"Language-Team: Russian\n"
+"Language: ru_RU\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : 2);\n"
+
+msgid "Zen RSS Settings"
+msgstr "Настройки Zen RSS"
+
+msgid "Zen RSS"
+msgstr "Zen RSS"
+
+msgid "Security check failed"
+msgstr "Ошибка проверки безопасности"
+
+msgid "Unauthorized"
+msgstr "Нет доступа"
+
+msgid "Cache cleared successfully!"
+msgstr "Кэш успешно очищен!"
+
+msgid "Settings saved successfully!"
+msgstr "Настройки сохранены!"
+
+msgid "RSS Feed Links"
+msgstr "Ссылки на RSS-ленты"
+
+msgid "Zen News Feed"
+msgstr "Лента Дзен Новостей"
+
+msgid "Zen Channel Feed"
+msgstr "Лента Дзен Канала"
+
+msgid "General Settings"
+msgstr "Общие настройки"
+
+msgid "News Feed Slug"
+msgstr "URL для ленты Новостей"
+
+msgid "URL path for News feed (e.g., \"zen-news\" → /feed/zen-news)"
+msgstr "Путь для ленты Новостей (например, \"zen-news\" → /feed/zen-news)"
+
+msgid "Channel Feed Slug"
+msgstr "URL для ленты Канала"
+
+msgid "URL path for Channel feed (e.g., \"zen-channel\" → /feed/zen-channel)"
+msgstr "Путь для ленты Канала (например, \"zen-channel\" → /feed/zen-channel)"
+
+msgid "Cache Duration"
+msgstr "Длительность кэширования"
+
+msgid "minutes"
+msgstr "минут"
+
+msgid "How long to cache feed output (1-1440 minutes)"
+msgstr "Сколько минут хранить кэш ленты (1-1440 минут)"
+
+msgid "Clear Cache Now"
+msgstr "Очистить кэш сейчас"
+
+msgid "News Feed Settings"
+msgstr "Настройки ленты Новостей"
+
+msgid "Number of Posts"
+msgstr "Количество записей"
+
+msgid "Maximum 500 items (Zen requirement)"
+msgstr "Максимум 500 записей (требование Дзена)"
+
+msgid "Maximum Age (Days)"
+msgstr "Максимальный возраст (дней)"
+
+msgid "Only include posts from last N days (maximum 8 for News)"
+msgstr "Включать записи только за последние N дней (максимум 8 для Новостей)"
+
+msgid "Logo URL"
+msgstr "URL логотипа"
+
+msgid "Optional logo for the feed"
+msgstr "Необязательный логотип для ленты"
+
+msgid "Include Thumbnails"
+msgstr "Включить миниатюры"
+
+msgid "Add image enclosure tags (JPEG format, OG image priority)"
+msgstr "Добавить теги изображений (формат JPEG, приоритет OG image)"
+
+msgid "Remove Teaser"
+msgstr "Удалить тизер"
+
+msgid "Remove first paragraph from full-text content"
+msgstr "Удалить первый абзац из полнотекстового контента"
+
+msgid "Remove Shortcodes"
+msgstr "Удалить шорткоды"
+
+msgid "Strip all WordPress shortcodes from content"
+msgstr "Удалить все WordPress шорткоды из контента"
+
+msgid "Channel Feed Settings"
+msgstr "Настройки ленты Канала"
+
+msgid "Recommended: at least 10 posts for initial setup"
+msgstr "Рекомендуется: минимум 10 записей для начальной настройки"
+
+msgid "Recommended: 2-3 days for fresh content"
+msgstr "Рекомендуется: 2-3 дня для свежего контента"
+
+msgid "Full Content"
+msgstr "Полный контент"
+
+msgid "Generate content:encoded with full article HTML (images converted to JPEG)"
+msgstr "Генерировать content:encoded с полным HTML статьи (изображения конвертируются в JPEG)"
+
+msgid "Related Posts Block"
+msgstr "Блок \"Ещё по теме\""
+
+msgid "Insert \"Related Posts\" links into content"
+msgstr "Вставить ссылки \"Ещё по теме\" в контент"
+
+msgid "Related Posts Position"
+msgstr "Позиция блока \"Ещё по теме\""
+
+msgid "After which paragraph to insert related posts (1-10)"
+msgstr "После какого абзаца вставить похожие записи (1-10)"
+
+msgid "Save Settings"
+msgstr "Сохранить настройки"

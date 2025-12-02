@@ -1,178 +1,233 @@
-<div class="wrap">
-    <h1>Настройки Zen News&Channel RSS</h1>
+<div class="wrap zen-rss-settings">
+    <h1><?php echo esc_html(get_admin_page_title()); ?></h1>
 
-    <div class="notice notice-info inline">
+    <?php if (isset($_GET['cache_cleared'])): ?>
+        <div class="notice notice-success is-dismissible">
+            <p><?php _e('Cache cleared successfully!', 'zen-news-channel-rss'); ?></p>
+        </div>
+    <?php endif; ?>
+
+    <?php if (isset($_GET['settings-updated'])): ?>
+        <div class="notice notice-success is-dismissible">
+            <p><?php _e('Settings saved successfully!', 'zen-news-channel-rss'); ?></p>
+        </div>
+    <?php endif; ?>
+
+    <!-- Feed Links -->
+    <div class="zen-rss-feed-links">
+        <h3><?php _e('RSS Feed Links', 'zen-news-channel-rss'); ?></h3>
         <p>
-            <strong>Ваши RSS ленты:</strong><br>
-            Дзен Новости: <a href="<?php echo site_url('/' . get_option('zen_rss_news_slug', 'zen-news')); ?>"
-                target="_blank"><?php echo site_url('/' . get_option('zen_rss_news_slug', 'zen-news')); ?></a><br>
-            Дзен Канал: <a href="<?php echo site_url('/' . get_option('zen_rss_channel_slug', 'zen-channel')); ?>"
-                target="_blank"><?php echo site_url('/' . get_option('zen_rss_channel_slug', 'zen-channel')); ?></a>
+            <a href="<?php echo esc_url(site_url('/feed/' . get_option('zen_rss_news_slug', 'zen-news'))); ?>"
+                target="_blank">
+                <?php _e('Zen News Feed', 'zen-news-channel-rss'); ?> &rarr;
+            </a>
+            <a href="<?php echo esc_url(site_url('/feed/' . get_option('zen_rss_channel_slug', 'zen-channel'))); ?>"
+                target="_blank">
+                <?php _e('Zen Channel Feed', 'zen-news-channel-rss'); ?> &rarr;
+            </a>
         </p>
     </div>
 
     <form method="post" action="options.php">
-        <?php
-        settings_fields('zen_rss_option_group');
-        do_settings_sections('zen_rss_option_group');
-        ?>
+        <?php settings_fields('zen_rss_option_group'); ?>
 
-        <hr>
-        <h2>Общие настройки</h2>
+        <!-- General Settings -->
+        <h2><?php _e('General Settings', 'zen-news-channel-rss'); ?></h2>
         <table class="form-table">
-            <tr valign="top">
-                <th scope="row">URL для Дзен Новостей</th>
+            <tr>
+                <th scope="row"><?php _e('News Feed Slug', 'zen-news-channel-rss'); ?></th>
                 <td>
                     <input type="text" name="zen_rss_news_slug"
                         value="<?php echo esc_attr(get_option('zen_rss_news_slug', 'zen-news')); ?>"
                         class="regular-text" />
-                    <p class="description">Путь (slug) для ленты новостей. По умолчанию: zen-news</p>
+                    <p class="description">
+                        <?php _e('URL path for News feed (e.g., "zen-news" → /feed/zen-news)', 'zen-news-channel-rss'); ?>
+                    </p>
                 </td>
             </tr>
-            <tr valign="top">
-                <th scope="row">URL для Дзен Канала</th>
+            <tr>
+                <th scope="row"><?php _e('Channel Feed Slug', 'zen-news-channel-rss'); ?></th>
                 <td>
                     <input type="text" name="zen_rss_channel_slug"
                         value="<?php echo esc_attr(get_option('zen_rss_channel_slug', 'zen-channel')); ?>"
                         class="regular-text" />
-                    <p class="description">Путь (slug) для ленты канала. По умолчанию: zen-channel</p>
+                    <p class="description">
+                        <?php _e('URL path for Channel feed (e.g., "zen-channel" → /feed/zen-channel)', 'zen-news-channel-rss'); ?>
+                    </p>
                 </td>
             </tr>
-            <tr valign="top">
-                <th scope="row">Yandex Webmaster Token</th>
+            <tr>
+                <th scope="row"><?php _e('Cache Duration', 'zen-news-channel-rss'); ?></th>
                 <td>
-                    <input type="text" name="zen_rss_yandex_token"
-                        value="<?php echo esc_attr(get_option('zen_rss_yandex_token')); ?>" class="regular-text" />
-                    <p class="description">OAuth токен для доступа к API Яндекс.Вебмастера.</p>
-                </td>
-            </tr>
-            <tr valign="top">
-                <th scope="row">Отправлять оригинальные тексты</th>
-                <td>
-                    <label>
-                        <input type="checkbox" name="zen_rss_send_unique_text" value="1" <?php checked(1, get_option('zen_rss_send_unique_text'), true); ?> />
-                        Автоматически отправлять тексты в "Оригинальные тексты" Яндекс.Вебмастера
-                    </label>
+                    <input type="number" name="zen_rss_cache_duration"
+                        value="<?php echo esc_attr(get_option('zen_rss_cache_duration', 15)); ?>" min="1" max="1440"
+                        class="small-text" />
+                    <?php _e('minutes', 'zen-news-channel-rss'); ?>
+                    <p class="description">
+                        <?php _e('How long to cache feed output (1-1440 minutes)', 'zen-news-channel-rss'); ?></p>
+                    <div class="zen-rss-cache-controls">
+                        <form method="post" action="<?php echo admin_url('admin-post.php'); ?>"
+                            style="display: inline;">
+                            <input type="hidden" name="action" value="zen_rss_clear_cache" />
+                            <?php wp_nonce_field('zen_rss_clear_cache'); ?>
+                            <button type="submit"
+                                class="button"><?php _e('Clear Cache Now', 'zen-news-channel-rss'); ?></button>
+                        </form>
+                    </div>
                 </td>
             </tr>
         </table>
 
-        <hr>
-        <h2>Настройки ленты для Дзен Новостей</h2>
+        <!-- News Feed Settings -->
+        <h2><?php _e('News Feed Settings', 'zen-news-channel-rss'); ?></h2>
         <table class="form-table">
-            <tr valign="top">
-                <th scope="row">Количество записей</th>
+            <tr>
+                <th scope="row"><?php _e('Number of Posts', 'zen-news-channel-rss'); ?></th>
                 <td>
                     <input type="number" name="zen_rss_news_count"
-                        value="<?php echo esc_attr(get_option('zen_rss_news_count', 50)); ?>" class="small-text" />
-                    <p class="description">Сколько последних записей включать в ленту.</p>
+                        value="<?php echo esc_attr(get_option('zen_rss_news_count', 50)); ?>" min="1" max="500"
+                        class="small-text" />
+                    <p class="description"><?php _e('Maximum 500 items (Zen requirement)', 'zen-news-channel-rss'); ?>
+                    </p>
                 </td>
             </tr>
-            <tr valign="top">
-                <th scope="row">Максимальный возраст (дней)</th>
+            <tr>
+                <th scope="row"><?php _e('Maximum Age (Days)', 'zen-news-channel-rss'); ?></th>
                 <td>
                     <input type="number" name="zen_rss_news_max_age"
-                        value="<?php echo esc_attr(get_option('zen_rss_news_max_age', 3)); ?>" class="small-text" />
-                    <p class="description">Не включать записи старше указанного количества дней.</p>
+                        value="<?php echo esc_attr(get_option('zen_rss_news_max_age', 3)); ?>" min="1" max="8"
+                        class="small-text" />
+                    <p class="description">
+                        <?php _e('Only include posts from last N days (maximum 8 for News)', 'zen-news-channel-rss'); ?>
+                    </p>
                 </td>
             </tr>
-            <tr valign="top">
-                <th scope="row">Логотип издания</th>
+            <tr>
+                <th scope="row"><?php _e('Logo URL', 'zen-news-channel-rss'); ?></th>
                 <td>
-                    <input type="text" name="zen_rss_news_logo"
-                        value="<?php echo esc_attr(get_option('zen_rss_news_logo')); ?>" class="regular-text" />
-                    <p class="description">Ссылка на горизонтальный логотип.</p>
+                    <input type="url" name="zen_rss_news_logo"
+                        value="<?php echo esc_url(get_option('zen_rss_news_logo')); ?>" class="regular-text" />
+                    <p class="description"><?php _e('Optional logo for the feed', 'zen-news-channel-rss'); ?></p>
                 </td>
             </tr>
-            <tr valign="top">
-                <th scope="row">Квадратный логотип</th>
+            <tr>
+                <th scope="row"><?php _e('Include Thumbnails', 'zen-news-channel-rss'); ?></th>
                 <td>
-                    <input type="text" name="zen_rss_news_logo_square"
-                        value="<?php echo esc_attr(get_option('zen_rss_news_logo_square')); ?>"
-                        class="regular-text" />
-                    <p class="description">Ссылка на квадратный логотип (опционально).</p>
-                </td>
-            </tr>
-            <tr valign="top">
-                <th scope="row">Миниатюры</th>
-                <td>
-                    <label>
-                        <input type="checkbox" name="zen_rss_news_thumbnails" value="1" <?php checked(1, get_option('zen_rss_news_thumbnails'), true); ?> />
-                        Включать изображения (тег enclosure)
+                    <label class="toggle-switch">
+                        <input type="checkbox" name="zen_rss_news_thumbnails" value="1" <?php checked(get_option('zen_rss_news_thumbnails', true), true); ?> />
+                        <span class="toggle-slider"></span>
                     </label>
+                    <p class="description">
+                        <?php _e('Add image enclosure tags (JPEG format, OG image priority)', 'zen-news-channel-rss'); ?>
+                    </p>
                 </td>
             </tr>
-            <tr valign="top">
-                <th scope="row">Очистка контента</th>
+            <tr>
+                <th scope="row"><?php _e('Remove Teaser', 'zen-news-channel-rss'); ?></th>
                 <td>
-                    <label>
-                        <input type="checkbox" name="zen_rss_news_remove_teaser" value="1" <?php checked(1, get_option('zen_rss_news_remove_teaser'), true); ?> />
-                        Удалять первый абзац (тизер) из полного текста
+                    <label class="toggle-switch">
+                        <input type="checkbox" name="zen_rss_news_remove_teaser" value="1" <?php checked(get_option('zen_rss_news_remove_teaser'), true); ?> />
+                        <span class="toggle-slider"></span>
                     </label>
-                    <br>
-                    <label>
-                        <input type="checkbox" name="zen_rss_news_remove_shortcodes" value="1" <?php checked(1, get_option('zen_rss_news_remove_shortcodes'), true); ?> />
-                        Удалять шорткоды
+                    <p class="description">
+                        <?php _e('Remove first paragraph from full-text content', 'zen-news-channel-rss'); ?></p>
+                </td>
+            </tr>
+            <tr>
+                <th scope="row"><?php _e('Remove Shortcodes', 'zen-news-channel-rss'); ?></th>
+                <td>
+                    <label class="toggle-switch">
+                        <input type="checkbox" name="zen_rss_news_remove_shortcodes" value="1" <?php checked(get_option('zen_rss_news_remove_shortcodes'), true); ?> />
+                        <span class="toggle-slider"></span>
                     </label>
+                    <p class="description">
+                        <?php _e('Strip all WordPress shortcodes from content', 'zen-news-channel-rss'); ?></p>
                 </td>
             </tr>
         </table>
 
-        <hr>
-        <h2>Настройки ленты для Дзен Канала</h2>
+        <!-- Channel Feed Settings -->
+        <h2><?php _e('Channel Feed Settings', 'zen-news-channel-rss'); ?></h2>
         <table class="form-table">
-            <tr valign="top">
-                <th scope="row">Количество записей</th>
+            <tr>
+                <th scope="row"><?php _e('Number of Posts', 'zen-news-channel-rss'); ?></th>
                 <td>
                     <input type="number" name="zen_rss_channel_count"
-                        value="<?php echo esc_attr(get_option('zen_rss_channel_count', 50)); ?>"
+                        value="<?php echo esc_attr(get_option('zen_rss_channel_count', 50)); ?>" min="1" max="500"
                         class="small-text" />
+                    <p class="description">
+                        <?php _e('Recommended: at least 10 posts for initial setup', 'zen-news-channel-rss'); ?></p>
                 </td>
             </tr>
-            <tr valign="top">
-                <th scope="row">Максимальный возраст (дней)</th>
+            <tr>
+                <th scope="row"><?php _e('Maximum Age (Days)', 'zen-news-channel-rss'); ?></th>
                 <td>
                     <input type="number" name="zen_rss_channel_max_age"
-                        value="<?php echo esc_attr(get_option('zen_rss_channel_max_age', 30)); ?>"
+                        value="<?php echo esc_attr(get_option('zen_rss_channel_max_age', 3)); ?>" min="1" max="30"
                         class="small-text" />
+                    <p class="description">
+                        <?php _e('Recommended: 2-3 days for fresh content', 'zen-news-channel-rss'); ?></p>
                 </td>
             </tr>
-            <tr valign="top">
-                <th scope="row">Полный текст</th>
+            <tr>
+                <th scope="row"><?php _e('Include Thumbnails', 'zen-news-channel-rss'); ?></th>
                 <td>
-                    <label>
-                        <input type="checkbox" name="zen_rss_channel_fulltext" value="1" <?php checked(1, get_option('zen_rss_channel_fulltext'), true); ?> />
-                        Генерировать content:encoded (полный текст статьи с разметкой)
+                    <label class="toggle-switch">
+                        <input type="checkbox" name="zen_rss_channel_thumbnails" value="1" <?php checked(get_option('zen_rss_channel_thumbnails', true), true); ?> />
+                        <span class="toggle-slider"></span>
                     </label>
-                    <p class="description">Если выключено, будет использоваться только краткое описание (excerpt).</p>
+                    <p class="description">
+                        <?php _e('Add image enclosure tags (JPEG format, OG image priority)', 'zen-news-channel-rss'); ?>
+                    </p>
                 </td>
             </tr>
-            <tr valign="top">
-                <th scope="row">Блок "Ещё по теме"</th>
+            <tr>
+                <th scope="row"><?php _e('Full Content', 'zen-news-channel-rss'); ?></th>
                 <td>
-                    <label>
-                        <input type="checkbox" name="zen_rss_channel_related" value="1" <?php checked(1, get_option('zen_rss_channel_related'), true); ?> />
-                        Встраивать блок ссылок на похожие статьи внутрь текста
+                    <label class="toggle-switch">
+                        <input type="checkbox" name="zen_rss_channel_fulltext" value="1" <?php checked(get_option('zen_rss_channel_fulltext', true), true); ?> />
+                        <span class="toggle-slider"></span>
                     </label>
-                    <p class="description">Добавляет 5 ссылок на статьи из той же рубрики после 2-го абзаца.</p>
+                    <p class="description">
+                        <?php _e('Generate content:encoded with full article HTML (images converted to JPEG)', 'zen-news-channel-rss'); ?>
+                    </p>
                 </td>
             </tr>
-            <tr valign="top">
-                <th scope="row">Миниатюры и Шорткоды</th>
+            <tr>
+                <th scope="row"><?php _e('Related Posts Block', 'zen-news-channel-rss'); ?></th>
                 <td>
-                    <label>
-                        <input type="checkbox" name="zen_rss_channel_thumbnails" value="1" <?php checked(1, get_option('zen_rss_channel_thumbnails'), true); ?> />
-                        Включать миниатюры
+                    <label class="toggle-switch">
+                        <input type="checkbox" name="zen_rss_channel_related" value="1" <?php checked(get_option('zen_rss_channel_related'), true); ?> />
+                        <span class="toggle-slider"></span>
                     </label>
-                    <br>
-                    <label>
-                        <input type="checkbox" name="zen_rss_channel_remove_shortcodes" value="1" <?php checked(1, get_option('zen_rss_channel_remove_shortcodes'), true); ?> />
-                        Удалять шорткоды
+                    <p class="description">
+                        <?php _e('Insert "Related Posts" links into content', 'zen-news-channel-rss'); ?></p>
+                </td>
+            </tr>
+            <tr>
+                <th scope="row"><?php _e('Related Posts Position', 'zen-news-channel-rss'); ?></th>
+                <td>
+                    <input type="number" name="zen_rss_related_position"
+                        value="<?php echo esc_attr(get_option('zen_rss_related_position', 2)); ?>" min="1" max="10"
+                        class="small-text" />
+                    <p class="description">
+                        <?php _e('After which paragraph to insert related posts (1-10)', 'zen-news-channel-rss'); ?>
+                    </p>
+                </td>
+            </tr>
+            <tr>
+                <th scope="row"><?php _e('Remove Shortcodes', 'zen-news-channel-rss'); ?></th>
+                <td>
+                    <label class="toggle-switch">
+                        <input type="checkbox" name="zen_rss_channel_remove_shortcodes" value="1" <?php checked(get_option('zen_rss_channel_remove_shortcodes'), true); ?> />
+                        <span class="toggle-slider"></span>
                     </label>
+                    <p class="description">
+                        <?php _e('Strip all WordPress shortcodes from content', 'zen-news-channel-rss'); ?></p>
                 </td>
             </tr>
         </table>
 
-        <?php submit_button('Сохранить настройки'); ?>
+        <?php submit_button(__('Save Settings', 'zen-news-channel-rss')); ?>
     </form>
 </div>

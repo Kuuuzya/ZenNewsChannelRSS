@@ -9,6 +9,17 @@ class Zen_RSS_Generator_News
             return;
         }
 
+        // Check cache first
+        $cached = Zen_RSS_Cache_Manager::get_cached_feed('news');
+        if ($cached !== false) {
+            header('Content-Type: application/rss+xml; charset=' . get_option('blog_charset'), true);
+            echo $cached;
+            return;
+        }
+
+        // Start output buffering for caching
+        ob_start();
+
         // Strict 8 days limit for News
         $max_days = 8;
         // User setting can only lower it, not increase it beyond 8
@@ -16,6 +27,9 @@ class Zen_RSS_Generator_News
         if ($user_days > 8) {
             $user_days = 8;
         }
+
+        // Cap at 500 items maximum
+        $item_count = min(500, (int) get_option('zen_rss_news_count', 50));
 
         header('Content-Type: application/rss+xml; charset=' . get_option('blog_charset'), true);
         echo '<?xml version="1.0" encoding="' . get_option('blog_charset') . '"?' . '>';
@@ -41,7 +55,7 @@ class Zen_RSS_Generator_News
                 $args = array(
                     'post_type' => 'post',
                     'post_status' => 'publish',
-                    'posts_per_page' => get_option('zen_rss_news_count', 50),
+                    'posts_per_page' => $item_count,
                     'date_query' => array(
                         array(
                             'after' => $user_days . ' days ago',
@@ -103,6 +117,11 @@ class Zen_RSS_Generator_News
             </channel>
         </rss>
         <?php
+
+        // Cache the output
+        $output = ob_get_clean();
+        Zen_RSS_Cache_Manager::set_cached_feed('news', $output);
+        echo $output;
     }
 
     /**
@@ -139,6 +158,9 @@ class Zen_RSS_Generator_News
         // Remove empty paragraphs
         $content = preg_replace('/<p>\s*<\/p>/', '', $content);
 
+        // Normalize whitespace: collapse multiple newlines to at most 2
+        $content = preg_replace('/\n{3,}/', "\n\n", $content);
+
         // Final XML escape
         // Note: We need to preserve HTML tags, so we can't just htmlspecialchars the whole thing.
         // But the content inside tags should be safe.
@@ -149,7 +171,7 @@ class Zen_RSS_Generator_News
         // Ideally we should escape special chars outside of tags, but that's complex without a parser.
         // We will assume the input content is UTF-8 and mostly safe after strip_tags.
         // But we MUST escape & < > " ' in the text nodes.
-        // For simplicity in this context, we'll trust strip_tags + standard WP filtering, 
+        // For simplicity in this context, we'll trust strip_tags + standard WP filtering,
         // but replace standalone & with &amp; if not part of an entity.
 
         return trim($content);
