@@ -51,13 +51,15 @@ class Zen_RSS_Admin
             wp_die(__('Unauthorized', 'zen-news-channel-rss'));
         }
 
-        Zen_RSS_Cache_Manager::clear_cache();
+        // Check which feed to clear
+        $feed_type = isset($_POST['feed_type']) ? sanitize_text_field($_POST['feed_type']) : 'all';
+        Zen_RSS_Cache_Manager::clear_cache($feed_type);
 
         // Redirect back with success message
         wp_redirect(add_query_arg(
             array(
                 'page' => 'zen-rss-settings',
-                'cache_cleared' => '1',
+                'cache_cleared' => $feed_type,
             ),
             admin_url('options-general.php')
         ));

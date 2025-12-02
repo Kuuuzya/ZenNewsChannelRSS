@@ -57,8 +57,21 @@ class Zen_RSS_Cache_Manager
     public static function get_cache_duration()
     {
         $minutes = (int) get_option('zen_rss_cache_duration', 15);
-        // Clamp between 1 and 1440 minutes (24 hours)
+        // Allow 0 to disable cache, otherwise clamp between 1 and 1440 minutes
+        if ($minutes === 0) {
+            return 0;
+        }
         $minutes = max(1, min(1440, $minutes));
         return $minutes * 60;
+    }
+
+    /**
+     * Check if caching is enabled
+     *
+     * @return bool
+     */
+    public static function is_cache_enabled()
+    {
+        return self::get_cache_duration() > 0;
     }
 }

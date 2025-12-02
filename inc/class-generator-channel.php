@@ -9,12 +9,14 @@ class Zen_RSS_Generator_Channel
             return;
         }
 
-        // Check cache first
-        $cached = Zen_RSS_Cache_Manager::get_cached_feed('channel');
-        if ($cached !== false) {
-            header('Content-Type: application/rss+xml; charset=' . get_option('blog_charset'), true);
-            echo $cached;
-            return;
+        // Check cache first (if enabled)
+        if (Zen_RSS_Cache_Manager::is_cache_enabled()) {
+            $cached = Zen_RSS_Cache_Manager::get_cached_feed('channel');
+            if ($cached !== false) {
+                header('Content-Type: application/rss+xml; charset=' . get_option('blog_charset'), true);
+                echo $cached;
+                return;
+            }
         }
 
         // Start output buffering for caching
@@ -118,9 +120,11 @@ class Zen_RSS_Generator_Channel
         </rss>
         <?php
 
-        // Cache the output
+        // Cache the output (if enabled)
         $output = ob_get_clean();
-        Zen_RSS_Cache_Manager::set_cached_feed('channel', $output);
+        if (Zen_RSS_Cache_Manager::is_cache_enabled()) {
+            Zen_RSS_Cache_Manager::set_cached_feed('channel', $output);
+        }
         echo $output;
     }
 
