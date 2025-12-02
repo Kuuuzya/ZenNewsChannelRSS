@@ -119,14 +119,14 @@ class Zen_RSS_Generator_News
             </channel>
         </rss>
         <?php
-		
-		// Cache the output (if enabled)
-		$output = ob_get_clean();
-		if ( Zen_RSS_Cache_Manager::is_cache_enabled() ) {
-			Zen_RSS_Cache_Manager::set_cached_feed( 'news', $output );
-		}
-		echo $output;
-	}
+
+        // Cache the output (if enabled)
+        $output = ob_get_clean();
+        if (Zen_RSS_Cache_Manager::is_cache_enabled()) {
+            Zen_RSS_Cache_Manager::set_cached_feed('news', $output);
+        }
+        echo $output;
+    }
 
     /**
      * Strict XML escaping
