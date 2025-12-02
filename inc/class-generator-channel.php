@@ -19,7 +19,7 @@ class Zen_RSS_Generator_Channel
                 <title><?php bloginfo_rss('name'); ?></title>
                 <link><?php bloginfo_rss('url'); ?></link>
                 <description><?php bloginfo_rss('description'); ?></description>
-                <language><?php bloginfo_rss('language'); ?></language>
+                <language>ru</language>
 
                 <?php
                 $args = array(
@@ -50,10 +50,6 @@ class Zen_RSS_Generator_Channel
                     $pubDate = mysql2date('D, d M Y H:i:s +0000', get_post_time('Y-m-d H:i:s', true), false);
                     $author = get_the_author();
 
-                    // Category
-                    $categories = get_the_category();
-                    $category = !empty($categories) ? $categories[0]->name : 'native-draft'; // Default to draft if no cat? Or just 'News'
-        
                     // Content
                     $content_raw = get_the_content();
                     $content_clean = Zen_RSS_Text_Cleaner::clean_for_channel($content_raw);
@@ -63,25 +59,8 @@ class Zen_RSS_Generator_Channel
                         $content_clean = Zen_RSS_Block_Related::inject_related($content_clean, $post_id);
                     }
 
-                    // Enclosure
-                    $thumbnail_id = get_post_thumbnail_id();
-                    $enclosure_url = '';
-                    $enclosure_type = '';
-
-                    if ($thumbnail_id && get_option('zen_rss_channel_thumbnails')) {
-                        $img = wp_get_attachment_image_src($thumbnail_id, 'full');
-                        if ($img) {
-                            $enclosure_url = $img[0];
-                            $enclosure_type = get_post_mime_type($thumbnail_id);
-                        }
-                    } elseif (get_option('zen_rss_channel_thumbnails')) {
-                        // Try to find image in content
-                        $first_img = Zen_RSS_Text_Cleaner::get_first_image($content_raw);
-                        if ($first_img) {
-                            $enclosure_url = $first_img;
-                            $enclosure_type = 'image/jpeg';
-                        }
-                    }
+                    // Image Logic (Strict JPEG/PNG, OG priority)
+                    $image_data = self::get_best_image($post_id, $content_raw);
 
                     ?>
                     <item>
@@ -90,10 +69,21 @@ class Zen_RSS_Generator_Channel
                         <guid><?php echo $guid; ?></guid>
                         <pubDate><?php echo $pubDate; ?></pubDate>
                         <dc:creator><?php echo $author; ?></dc:creator>
-                        <category><?php echo $category; ?></category>
-                        <?php if ($enclosure_url): ?>
-                            <enclosure url="<?php echo esc_url($enclosure_url); ?>"
-                                type="<?php echo esc_attr($enclosure_type); ?>" />
+
+                        <category>format-article</category>
+                        <category>index</category>
+                        <category>comment-all</category>
+                        <?php
+                        // Optional: Add original category as well
+                        $cats = get_the_category();
+                        if (!empty($cats)) {
+                            echo '<category>' . esc_html($cats[0]->name) . '</category>';
+                        }
+                        ?>
+
+                        <?php if ($image_data): ?>
+                            <enclosure url="<?php echo esc_url($image_data['url']); ?>"
+                                type="<?php echo esc_attr($image_data['type']); ?>" />
                         <?php endif; ?>
                         <content:encoded><![CDATA[<?php echo $content_clean; ?>]]></content:encoded>
                     </item>
@@ -102,5 +92,75 @@ class Zen_RSS_Generator_Channel
             </channel>
         </rss>
         <?php
+    }
+
+    /**
+     * Get best image (OG -> Featured -> Content)
+     * Enforce JPEG/PNG and size
+     * (Duplicated from News Generator for isolation)
+     */
+    private static function get_best_image($post_id, $content)
+    {
+        if (!get_option('zen_rss_channel_thumbnails')) {
+            return null;
+        }
+
+        $candidates = array();
+
+        // 1. Open Graph (Yoast / RankMath / Generic)
+        $og_image = get_post_meta($post_id, '_yoast_wpseo_opengraph-image', true); // Yoast
+        if (!$og_image) {
+            $og_image = get_post_meta($post_id, 'rank_math_facebook_image', true); // RankMath
+        }
+        if (!$og_image) {
+            $og_image = get_post_meta($post_id, 'og_image', true);
+        }
+
+        if ($og_image) {
+            $candidates[] = $og_image;
+        }
+
+        // 2. Featured Image
+        $thumb_id = get_post_thumbnail_id($post_id);
+        if ($thumb_id) {
+            $img_src = wp_get_attachment_image_src($thumb_id, 'full');
+            if ($img_src) {
+                $candidates[] = $img_src[0];
+            }
+        }
+
+        // 3. Content Image
+        if (preg_match('/<img.+src=[\'"]([^\'"]+)[\'"].*>/i', $content, $matches)) {
+            $candidates[] = $matches[1];
+        }
+
+        // Process candidates
+        foreach ($candidates as $url) {
+            $ext = strtolower(pathinfo($url, PATHINFO_EXTENSION));
+
+            // If AVIF/WEBP, try to find JPG replacement
+            if (in_array($ext, array('avif', 'webp'))) {
+                $jpg_url = preg_replace('/\.(avif|webp)$/i', '.jpg', $url);
+                // Optimistic replacement
+                $url = $jpg_url;
+                $ext = 'jpg';
+            }
+
+            if (in_array($ext, array('jpg', 'jpeg'))) {
+                return array(
+                    'url' => $url,
+                    'type' => 'image/jpeg',
+                );
+            }
+
+            if ($ext === 'png') {
+                return array(
+                    'url' => $url,
+                    'type' => 'image/png',
+                );
+            }
+        }
+
+        return null;
     }
 }

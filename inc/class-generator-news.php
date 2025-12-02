@@ -77,6 +77,8 @@ class Zen_RSS_Generator_News
                     if (empty($description)) {
                         $description = wp_trim_words($content, 20);
                     }
+                    // Decode first to avoid double escaping if WP already escaped it
+                    $description = wp_specialchars_decode($description, ENT_QUOTES);
                     $description = self::xml_escape($description);
 
                     // Image Logic

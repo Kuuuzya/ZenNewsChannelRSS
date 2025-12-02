@@ -35,12 +35,11 @@ class Zen_RSS_Block_Related
         }
 
         $output = PHP_EOL . '<h3>Ещё по теме:</h3>' . PHP_EOL;
-        $output .= '<ul>' . PHP_EOL;
+        // Use <p><a>...</a></p> format for Zen Channel compliance
         while ($query->have_posts()) {
             $query->the_post();
-            $output .= '<li><a href="' . get_permalink() . '">' . get_the_title() . '</a></li>' . PHP_EOL;
+            $output .= '<p><a href="' . get_permalink() . '">' . get_the_title() . '</a></p>' . PHP_EOL;
         }
-        $output .= '</ul>' . PHP_EOL;
 
         wp_reset_postdata();
 
