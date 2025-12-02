@@ -30,7 +30,7 @@ register_activation_hook(__FILE__, 'zen_rss_activate');
 function zen_rss_activate()
 {
     zen_rss_add_feed_rules();
-    flush_rewrite_rules();
+    // flush_rewrite_rules(); // Manual flush required to avoid activation errors
 }
 
 /**
@@ -39,7 +39,7 @@ function zen_rss_activate()
 register_deactivation_hook(__FILE__, 'zen_rss_deactivate');
 function zen_rss_deactivate()
 {
-    flush_rewrite_rules();
+    // flush_rewrite_rules();
 }
 
 /**
@@ -68,8 +68,10 @@ function zen_rss_add_feed_rules()
  */
 function zen_rss_render_news_feed()
 {
-    $generator = new Zen_RSS_Generator_News();
-    $generator->render();
+    if (class_exists('Zen_RSS_Generator_News')) {
+        $generator = new Zen_RSS_Generator_News();
+        $generator->render();
+    }
 }
 
 /**
@@ -77,11 +79,13 @@ function zen_rss_render_news_feed()
  */
 function zen_rss_render_channel_feed()
 {
-    $generator = new Zen_RSS_Generator_Channel();
-    $generator->render();
+    if (class_exists('Zen_RSS_Generator_Channel')) {
+        $generator = new Zen_RSS_Generator_Channel();
+        $generator->render();
+    }
 }
 
 // Initialize Admin
-if (is_admin()) {
+if (is_admin() && class_exists('Zen_RSS_Admin')) {
     new Zen_RSS_Admin();
 }
