@@ -9,6 +9,14 @@ class Zen_RSS_Admin
         add_action('admin_init', array($this, 'page_init'));
         add_action('admin_enqueue_scripts', array($this, 'enqueue_admin_styles'));
         add_action('admin_post_zen_rss_clear_cache', array($this, 'handle_clear_cache'));
+        add_action('updated_option', array($this, 'clear_cache_on_save'), 10, 3);
+    }
+
+    public function clear_cache_on_save($option, $old_value, $value)
+    {
+        if (strpos($option, 'zen_rss_') === 0) {
+            Zen_RSS_Cache_Manager::clear_cache('all');
+        }
     }
 
     public function add_plugin_page()
