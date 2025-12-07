@@ -3,10 +3,10 @@ Contributors: kuuuzya
 Tags: rss, yandex, zen, feed, news
 Requires at least: 5.0
 Tested up to: 6.4
-Stable tag: 1.1.0.1
+Stable tag: 1.1.0.2
 Requires PHP: 7.0
 License: GPLv2 or later
-License URI: https://www.gnu.org/licenses/gpl-2.0.html
+License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 Professional RSS feed generator for Yandex Zen with full platform compliance. Creates News and Channel feeds with smart caching and modern UI.
 

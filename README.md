@@ -1,5 +1,5 @@
 # Zen News & Channel RSS
-**Version:** 1.1.0.1
+**Version:** 1.1.0.2
 **Requires at least:** 5.0
 **Tested up to:** 6.4
 **Генератор RSS-лент для Яндекс.Дзен с полной поддержкой требований платформы**
