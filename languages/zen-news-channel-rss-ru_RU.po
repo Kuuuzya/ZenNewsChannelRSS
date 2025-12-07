@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Zen News&Channel RSS 1.1.0\n"
 "POT-Creation-Date: 2025-12-02 11:00+0000\n"
-"PO-Revision-Date: 2025-12-02 11:00+0000\n"
+"PO-Revision-Date: 2025-12-07 21:00+0400\n"
 "Last-Translator: \n"
 "Language-Team: Russian\n"
 "Language: ru_RU\n"
@@ -134,3 +134,156 @@ msgstr "После какого абзаца вставить похожие з�
 
 msgid "Save Settings"
 msgstr "Сохранить настройки"
+
+msgid "Cache for all feeds cleared successfully!"
+msgstr "Кэш всех лент успешно очищен!"
+
+msgid "News feed cache cleared successfully!"
+msgstr "Кэш ленты новостей успешно очищен!"
+
+msgid "Channel feed cache cleared successfully!"
+msgstr "Кэш ленты канала успешно очищен!"
+
+msgid "Settings saved successfully! Remember to clear the cache to see changes."
+msgstr "Настройки сохранены! Не забудьте очистить кэш, чтобы увидеть изменения."
+
+msgid "News Feed Settings (Zen News)"
+msgstr "Настройки ленты новостей (Дзен Новости)"
+
+msgid "Channel Feed Settings (Zen Channel)"
+msgstr "Настройки ленты канала (Дзен Канал)"
+
+msgid "Clear All Cache"
+msgstr "Очистить весь кэш"
+
+msgid "Clear News Cache"
+msgstr "Очистить кэш новостей"
+
+msgid "Clear Channel Cache"
+msgstr "Очистить кэш канала"
+
+msgid "View News Feed"
+msgstr "Открыть ленту новостей"
+
+msgid "View Channel Feed"
+msgstr "Открыть ленту канала"
+
+msgid "Full URL: %s"
+msgstr "Полный URL: %s"
+
+msgid "How long to cache RSS feeds before regenerating (0-1440 minutes / 24 hours)."
+msgstr "Как долго хранить кэш RSS-лент перед регенерацией (0-1440 минут / 24 часа)."
+
+msgid "Set to 0 to disable caching completely."
+msgstr "Установите 0, чтобы полностью отключить кэширование."
+
+msgid "Recommended: 15-60 minutes for most sites. Caching improves performance and reduces server load."
+msgstr "Рекомендуется: 15-60 минут для большинства сайтов. Кэширование улучшает производительность и снижает нагрузку на сервер."
+
+msgid "Configuration for Yandex Zen News feed. This feed follows strict Zen News requirements (8-day limit, JPEG images, clean text)."
+msgstr "Настройка ленты для Яндекс.Новости (Дзен). Эта лента соответствует строгим требованиям (лимит 8 дней, JPEG изображения, чистый текст)."
+
+msgid "Configuration for Yandex Zen Channel feed. Includes full HTML content with automatic JPEG conversion, figure cleanup, and \"Source\" attribution."
+msgstr "Настройка ленты для Яндекс.Дзен Каналов. Включает полный HTML контент с автоматической конвертацией в JPEG, очисткой figure и атрибуцией \"Источника\"."
+
+msgid "How many posts to include in the News feed (1-500)."
+msgstr "Сколько записей включить в ленту новостей (1-500)."
+
+msgid "Zen requirement: Maximum 500 items."
+msgstr "Требование Дзена: Максимум 500 элементов."
+
+msgid "Recommended: 30-50 posts."
+msgstr "Рекомендуется: 30-50 записей."
+
+msgid "Only include posts from the last N days (1-8)."
+msgstr "Включать записи только за последние N дней (1-8)."
+
+msgid "Zen News requirement: Maximum 8 days."
+msgstr "Требование Дзен Новостей: Максимум 8 дней."
+
+msgid "Recommended: 3 days for fresh news content."
+msgstr "Рекомендуется: 3 дня для свежего новостного контента."
+
+msgid "Optional: URL to your publication logo (JPEG or PNG format)."
+msgstr "Необязательно: URL логотипа вашего издания (формат JPEG или PNG)."
+
+msgid "Used in the RSS <image> tag for feed branding."
+msgstr "Используется в теге <image> RSS для брендинга ленты."
+
+msgid "Add <enclosure> tags with post images to each item."
+msgstr "Добавлять теги <enclosure> с изображениями к каждой записи."
+
+msgid "Priority: OpenGraph image → Featured image → First content image."
+msgstr "Приоритет: OpenGraph изображение → Изображение записи → Первое изображение в контенте."
+
+msgid "Automatically converts AVIF/WebP to JPEG format (Zen requirement)."
+msgstr "Автоматически конвертирует AVIF/WebP в формат JPEG (требование Дзена)."
+
+msgid "Remove Teaser Paragraph"
+msgstr "Удалить вводный абзац"
+
+msgid "Remove the first paragraph from <yandex:full-text> content."
+msgstr "Удалить первый абзац из контента <yandex:full-text>."
+
+msgid "Useful if your first paragraph is a teaser/summary."
+msgstr "Полезно, если ваш первый абзац — это тизер или краткое содержание."
+
+msgid "Strip all WordPress shortcodes from content before sending to feed."
+msgstr "Удалить все шорткоды WordPress из контента перед отправкой в ленту."
+
+msgid "Recommended: Enabled, as shortcodes don't render in RSS readers."
+msgstr "Рекомендуется: Включено, так как шорткоды не отображаются в RSS-ридерах."
+
+msgid "How many posts to include in the Channel feed (1-500)."
+msgstr "Сколько записей включить в ленту канала (1-500)."
+
+msgid "Recommendation: At least 10 posts for initial feed setup."
+msgstr "Рекомендация: Минимум 10 записей для начальной настройки ленты."
+
+msgid "Only include posts from the last N days (1-30)."
+msgstr "Включать записи только за последние N дней (1-30)."
+
+msgid "Recommendation: 2-3 days for fresh content."
+msgstr "Рекомендация: 2-3 дня для свежего контента."
+
+msgid "Avoid re-publishing old posts to Zen by keeping this value low."
+msgstr "Избегайте повторной публикации старых записей в Дзен, сохраняя это значение низким."
+
+msgid "Full Content (content:encoded)"
+msgstr "Полный контент (content:encoded)"
+
+msgid "Include full article HTML in <content:encoded> tag."
+msgstr "Включить полный HTML статьи в тег <content:encoded>."
+
+msgid "Automatically converts images to JPEG, simplifies <figure> markup, and adds \"Source\" attribution."
+msgstr "Автоматически конвертирует изображения в JPEG, упрощает разметку <figure> и добавляет атрибуцию \"Источник\"."
+
+msgid "Recommended: Enabled for Zen Channel."
+msgstr "Рекомендуется: Включено для Дзен Канала."
+
+msgid "\"Related Posts\" Block"
+msgstr "Блок \"Ещё по теме\""
+
+msgid "Insert \"Ещё по теме:\" (Related Posts) links into content."
+msgstr "Вставить ссылки \"Ещё по теме:\" в контент."
+
+msgid "Displays up to 5 related posts from the same categories using <p><a> format (Zen-compliant)."
+msgstr "Отображает до 5 похожих записей из тех же рубрик в формате <p><a> (совместимо с Дзен)."
+
+msgid "After which paragraph to insert the related posts block (1-10)."
+msgstr "После какого абзаца вставить блок похожих записей (1-10)."
+
+msgid "Default: 2 (after second paragraph). If article has fewer paragraphs, block appears at the end."
+msgstr "По умолчанию: 2 (после второго абзаца). Если в статье меньше абзацев, блок появится в конце."
+
+msgid "News Feed URL Slug"
+msgstr "URL для ленты Новостей"
+
+msgid "Custom URL path for the News feed. Default: \"zen-news\""
+msgstr "Пользовательский путь URL для ленты новостей. По умолчанию: \"zen-news\""
+
+msgid "Channel Feed URL Slug"
+msgstr "URL для ленты Канала"
+
+msgid "Custom URL path for the Channel feed. Default: \"zen-channel\""
+msgstr "Пользовательский путь URL для ленты канала. По умолчанию: \"zen-channel\""
