@@ -3,7 +3,7 @@ Contributors: kuuuzya
 Tags: rss, yandex, zen, feed, news
 Requires at least: 5.0
 Tested up to: 6.4
-Stable tag: 1.1.0
+Stable tag: 1.1.0.1
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -190,7 +190,7 @@ All generated feeds are public RSS feeds based on your published WordPress conte
 
 For support requests, bug reports, or feature suggestions:
 * GitHub Issues: https://github.com/kuuuzya/zen-news-channel-rss/issues
-* Email: support@example.com (replace with actual)
+* Email: Kuuuzya@ya.ru (replace with actual)
 
 == Credits ==
 

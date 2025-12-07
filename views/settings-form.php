@@ -24,8 +24,9 @@
         </div>
     <?php endif; ?>
 
-    <form method="post" action="options.php">
-        <?php settings_fields('zen_rss_option_group'); ?>
+    <form method="post" action="<?php echo admin_url('admin-post.php'); ?>">
+        <input type="hidden" name="action" value="zen_rss_save_settings" />
+        <?php wp_nonce_field('zen_rss_save_settings', 'zen_rss_save_nonce'); ?>
 
         <!-- General Settings -->
         <h2><?php _e('General Settings', 'zen-news-channel-rss'); ?></h2>
@@ -125,8 +126,7 @@
             </tr>
             <tr>
                 <th scope="row">
-                    <label
-                        for="zen_rss_news_max_age"><?php _e('Maximum Age (Days)', 'zen-news-channel-rss'); ?></label>
+                    <label for="zen_rss_news_max_age"><?php _e('Maximum Age (Days)', 'zen-news-channel-rss'); ?></label>
                 </th>
                 <td>
                     <input type="number" id="zen_rss_news_max_age" name="zen_rss_news_max_age"
