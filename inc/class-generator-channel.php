@@ -67,8 +67,14 @@ class Zen_RSS_Generator_Channel
                     $pubDate = mysql2date('D, d M Y H:i:s +0000', get_post_time('Y-m-d H:i:s', true), false);
                     $author = get_the_author();
 
-                    // Content
+                    // Get raw content early as it's needed for image detection
                     $content_raw = get_the_content();
+
+                    // Image Logic (Strict JPEG/PNG, OG priority)
+                    // Moved up to allow injection into content
+                    $image_data = self::get_best_image($post_id, $content_raw);
+
+                    // Content
                     $content_clean = Zen_RSS_Text_Cleaner::clean_for_channel($content_raw);
 
                     // Convert AVIF/WebP images to JPEG in content
@@ -76,6 +82,24 @@ class Zen_RSS_Generator_Channel
 
                     // Simplify figure markup
                     $content_clean = self::simplify_figures($content_clean);
+
+                    // Inject Cover Image into Content (User Request)
+                    // Zen recommends having the cover image inside <figure><img> in the content
+                    if ($image_data && !empty($image_data['url'])) {
+                        // Check if image is already in content to avoid duplicates
+                        if (strpos($content_clean, $image_data['url']) === false) {
+                            $img_alt = esc_attr($title);
+                            $cover_html = '<figure><img src="' . esc_url($image_data['url']) . '" alt="' . $img_alt . '"></figure>';
+
+                            if (class_exists('Zen_RSS_Injector')) {
+                                // Inject after 1st paragraph
+                                $content_clean = Zen_RSS_Injector::inject($content_clean, $cover_html, 1);
+                            } else {
+                                // Fallback: prepend
+                                $content_clean = $cover_html . $content_clean;
+                            }
+                        }
+                    }
 
                     // Inject Related Posts
                     if (get_option('zen_rss_channel_related')) {
@@ -97,9 +121,6 @@ class Zen_RSS_Generator_Channel
                     // Add source attribution at the end
                     $site_name = get_bloginfo('name');
                     $content_clean .= PHP_EOL . '<p><strong>Источник:</strong> <a href="' . esc_url($link) . '">' . esc_html($site_name) . '</a></p>';
-
-                    // Image Logic (Strict JPEG/PNG, OG priority)
-                    $image_data = self::get_best_image($post_id, $content_raw);
 
                     ?>
                     <item>
