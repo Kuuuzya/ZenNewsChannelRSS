@@ -82,6 +82,18 @@ class Zen_RSS_Generator_Channel
                         $content_clean = Zen_RSS_Block_Related::inject_related($content_clean, $post_id);
                     }
 
+                    // Inject Custom Content Block
+                    if (get_option('zen_rss_custom_content_enable')) {
+                        $custom_html = get_option('zen_rss_custom_content_html');
+                        $custom_pos = (int) get_option('zen_rss_custom_content_position', 3);
+
+                        if (!empty($custom_html) && class_exists('Zen_RSS_Injector')) {
+                            // We use a slightly different position logic or just reuse the injector
+                            // If related posts are at pos 2, and custom at pos 3, it should work fine sequentially
+                            $content_clean = Zen_RSS_Injector::inject($content_clean, $custom_html, $custom_pos);
+                        }
+                    }
+
                     // Add source attribution at the end
                     $site_name = get_bloginfo('name');
                     $content_clean .= PHP_EOL . '<p><strong>Источник:</strong> <a href="' . esc_url($link) . '">' . esc_html($site_name) . '</a></p>';

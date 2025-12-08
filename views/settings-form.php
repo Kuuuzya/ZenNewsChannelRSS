@@ -288,6 +288,69 @@
                     </td>
                 </tr>
                 <tr>
+                    <th scope="row">
+                        <label for="zen_rss_related_count"><?php _e('Number of Related Posts', 'zen-news-channel-rss'); ?></label>
+                    </th>
+                    <td>
+                        <input type="number" id="zen_rss_related_count" name="zen_rss_related_count"
+                            value="<?php echo esc_attr(get_option('zen_rss_related_count', 5)); ?>" min="1" max="10"
+                            class="small-text" />
+                        <p class="description">
+                            <?php _e('How many related posts to display (default: 5).', 'zen-news-channel-rss'); ?>
+                        </p>
+                    </td>
+                </tr>
+                
+                <!-- Custom Content Block -->
+                <tr style="border-top: 1px solid #ddd;">
+                    <th scope="row" colspan="2" style="padding-top: 20px;">
+                        <h3><?php _e('Custom Content Block', 'zen-news-channel-rss'); ?></h3>
+                    </th>
+                </tr>
+                <tr>
+                    <th scope="row"><?php _e('Enable Custom Block', 'zen-news-channel-rss'); ?></th>
+                    <td>
+                        <label class="toggle-switch">
+                            <input type="hidden" name="zen_rss_custom_content_enable" value="0" />
+                            <input type="checkbox" name="zen_rss_custom_content_enable" value="1" <?php checked(get_option('zen_rss_custom_content_enable'), true); ?> />
+                            <span class="toggle-slider"></span>
+                        </label>
+                        <p class="description">
+                            <?php _e('Insert a custom HTML block into the content (e.g. for promos or social links).', 'zen-news-channel-rss'); ?>
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row">
+                        <label for="zen_rss_custom_content_html"><?php _e('Custom HTML Content', 'zen-news-channel-rss'); ?></label>
+                    </th>
+                    <td>
+                        <?php 
+                        $default_promo = '<p>Подписывайтесь на канал <a href="https://t.me/itzineru">itzine</a> и канал подкаста <a href="https://t.me/forgeeks">ForGeeks</a> в Telegram!</p>';
+                        $custom_content = get_option('zen_rss_custom_content_html', $default_promo);
+                        ?>
+                        <textarea id="zen_rss_custom_content_html" name="zen_rss_custom_content_html" rows="5" class="large-text code"><?php echo esc_textarea($custom_content); ?></textarea>
+                        <p class="description">
+                            <?php _e('HTML content to insert. Allowed tags: p, a, b, i, strong, em, br.', 'zen-news-channel-rss'); ?>
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row">
+                        <label for="zen_rss_custom_content_position"><?php _e('Custom Block Position', 'zen-news-channel-rss'); ?></label>
+                    </th>
+                    <td>
+                        <input type="number" id="zen_rss_custom_content_position" name="zen_rss_custom_content_position"
+                            value="<?php echo esc_attr(get_option('zen_rss_custom_content_position', 3)); ?>" min="1" max="20"
+                            class="small-text" />
+                        <p class="description">
+                            <?php _e('After which paragraph to insert the custom block.', 'zen-news-channel-rss'); ?><br>
+                            <?php _e('Default: 3. If paragraph doesn\'t exist, block appears at the end.', 'zen-news-channel-rss'); ?>
+                        </p>
+                    </td>
+                </tr>
+
+                <tr>
                     <th scope="row"><?php _e('Remove Shortcodes', 'zen-news-channel-rss'); ?></th>
                     <td>
                         <label class="toggle-switch">

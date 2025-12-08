@@ -75,6 +75,10 @@ class Zen_RSS_Admin
             'zen_rss_channel_fulltext' => 'bool',
             'zen_rss_channel_related' => 'bool',
             'zen_rss_related_position' => 'int',
+            'zen_rss_related_count' => 'int', // New
+            'zen_rss_custom_content_enable' => 'bool', // New
+            'zen_rss_custom_content_html' => 'html', // New
+            'zen_rss_custom_content_position' => 'int', // New
             'zen_rss_channel_remove_shortcodes' => 'bool',
         );
 
@@ -96,6 +100,10 @@ class Zen_RSS_Admin
                     // Hidden fields send '0'.
                     // We simply cast to bool.
                     update_option($field, (bool) $value);
+                    break;
+                case 'html':
+                    // Allow safe HTML for custom content
+                    update_option($field, wp_kses_post($value));
                     break;
                 case 'int_age_news':
                     $age = absint($value);

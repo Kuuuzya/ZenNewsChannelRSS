@@ -20,10 +20,14 @@ class Zen_RSS_Block_Related
             return '';
         }
 
+        $count = (int) get_option('zen_rss_related_count', 5);
+        if ($count < 1)
+            $count = 5;
+
         $args = array(
             'category__in' => $categories,
             'post__not_in' => array($post_id),
-            'posts_per_page' => 5,
+            'posts_per_page' => $count,
             'orderby' => 'rand',
             'post_status' => 'publish',
         );
@@ -35,11 +39,14 @@ class Zen_RSS_Block_Related
         }
 
         $output = PHP_EOL . '<h3>Ещё по теме:</h3>' . PHP_EOL;
-        // Use <p><a>...</a></p> format for Zen Channel compliance
+        $output .= '<ul>' . PHP_EOL;
+
         while ($query->have_posts()) {
             $query->the_post();
-            $output .= '<p><a href="' . get_permalink() . '">' . get_the_title() . '</a></p>' . PHP_EOL;
+            $output .= '<li><a href="' . get_permalink() . '">' . get_the_title() . '</a></li>' . PHP_EOL;
         }
+
+        $output .= '</ul>' . PHP_EOL;
 
         wp_reset_postdata();
 
@@ -63,33 +70,10 @@ class Zen_RSS_Block_Related
         // Get configurable position (default: 2)
         $position = max(1, (int) get_option('zen_rss_related_position', 2));
 
-        // Try to split by paragraphs
-        // Using a more robust regex split to handle various p tag attributes or spacing
-        $paragraphs = preg_split('/(<\/p>)/i', $content, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
-
-        // $paragraphs array will look like: [0] => "Text...", [1] => "</p>", [2] => "Text...", [3] => "</p>"
-        // We want to insert after the Nth paragraph (so after index 2N-1)
-
-        $count = 0;
-        $inserted = false;
-        $new_content = '';
-
-        foreach ($paragraphs as $chunk) {
-            $new_content .= $chunk;
-            if (strtolower($chunk) === '</p>') {
-                $count++;
-                if ($count === $position) {
-                    $new_content .= $related_html;
-                    $inserted = true;
-                }
-            }
+        if (class_exists('Zen_RSS_Injector')) {
+            return Zen_RSS_Injector::inject($content, $related_html, $position);
         }
 
-        // If we couldn't insert (e.g. less paragraphs than position), append to the end
-        if (!$inserted) {
-            $new_content .= $related_html;
-        }
-
-        return $new_content;
+        return $content . $related_html; // Fallback
     }
 }

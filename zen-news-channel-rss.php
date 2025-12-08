@@ -27,6 +27,7 @@ function zen_rss_load_textdomain()
 require_once ZEN_RSS_PATH . 'admin/settings-page.php';
 require_once ZEN_RSS_PATH . 'inc/class-cache-manager.php';
 require_once ZEN_RSS_PATH . 'inc/class-text-cleaner.php';
+require_once ZEN_RSS_PATH . 'inc/class-injector.php';
 require_once ZEN_RSS_PATH . 'inc/class-block-related.php';
 require_once ZEN_RSS_PATH . 'inc/class-generator-news.php';
 require_once ZEN_RSS_PATH . 'inc/class-generator-channel.php';
