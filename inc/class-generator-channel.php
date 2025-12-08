@@ -250,14 +250,7 @@ class Zen_RSS_Generator_Channel
         foreach ($candidates as $url) {
             $ext = strtolower(pathinfo($url, PATHINFO_EXTENSION));
 
-            // If AVIF/WEBP, try to find JPG replacement
-            if (in_array($ext, array('avif', 'webp'))) {
-                $jpg_url = preg_replace('/\.(avif|webp)$/i', '.jpg', $url);
-                // Optimistic replacement
-                $url = $jpg_url;
-                $ext = 'jpg';
-            }
-
+            // Accept JPEG/JPG/PNG directly
             if (in_array($ext, array('jpg', 'jpeg'))) {
                 return array(
                     'url' => $url,
@@ -271,6 +264,9 @@ class Zen_RSS_Generator_Channel
                     'type' => 'image/png',
                 );
             }
+
+            // Skip AVIF/WebP - they should not be in OG:image if user configured it correctly
+            // If we encounter them, just skip and try next candidate
         }
 
         return null;

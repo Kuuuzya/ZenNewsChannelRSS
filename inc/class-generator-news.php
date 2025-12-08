@@ -231,28 +231,8 @@ class Zen_RSS_Generator_News
             // Check extension
             $ext = strtolower(pathinfo($url, PATHINFO_EXTENSION));
 
-            // If AVIF/WEBP, try to find JPG replacement
-            if (in_array($ext, array('avif', 'webp'))) {
-                $jpg_url = preg_replace('/\.(avif|webp)$/i', '.jpg', $url);
-                $jpeg_url = preg_replace('/\.(avif|webp)$/i', '.jpeg', $url);
-
-                // We can't easily check file existence on remote/CDN URLs without a request.
-                // But often in WP uploads, they exist side-by-side if generated.
-                // Let's assume if we change extension it MIGHT exist. 
-                // Better approach: check if it's a local file.
-
-                // For safety, let's prefer the original if it's already JPG/PNG.
-                // But user explicitly asked to replace.
-                // Let's try to guess the JPG version.
-                $url = $jpg_url; // Optimistic replacement
-                $ext = 'jpg';
-            }
-
+            // Accept JPEG/JPG/PNG directly
             if (in_array($ext, array('jpg', 'jpeg'))) {
-                // Check size if possible (only for local attachments easily)
-                // For remote URLs, we can't check size without HEAD request.
-                // We'll assume 'full' size or OG image is large enough.
-
                 return array(
                     'url' => $url,
                     'type' => 'image/jpeg',
@@ -265,6 +245,9 @@ class Zen_RSS_Generator_News
                     'type' => 'image/png',
                 );
             }
+
+            // Skip AVIF/WebP - they should not be in OG:image if user configured it correctly
+            // If we encounter them, just skip and try next candidate
         }
 
         return null;
