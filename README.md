@@ -1,7 +1,7 @@
 # Zen News & Channel RSS
-**Version:** 1.1.0.2
-**Requires at least:** 5.0
-**Tested up to:** 6.4
+**Version:** 1.1.0.3
+**Requires at least:** WordPress 5.0
+**Tested up to:** WordPress 6.4
 **Генератор RSS-лент для Яндекс.Дзен с полной поддержкой требований платформы**
 
 [![WordPress Plugin Version](https://img.shields.io/badge/version-1.1.0-blue.svg)](https://github.com/kuuuzya/zen-news-channel-rss)

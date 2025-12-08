@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Zen News&Channel RSS
  * Description: Generates two independent RSS feeds for Yandex Zen (News and Channel) with a comprehensive admin interface.
- * Version: 1.1.0.2
+ * Version:           1.1.0.3
  * Author: Sergey Kuznetsov (Kuuuzya)
  * Text Domain: zen-news-channel-rss
  * Domain Path: /languages
@@ -14,7 +14,7 @@ if (!defined('ABSPATH')) {
 
 define('ZEN_RSS_PATH', plugin_dir_path(__FILE__));
 define('ZEN_RSS_URL', plugin_dir_url(__FILE__));
-define('ZEN_RSS_VERSION', '1.1.0.2');
+define('ZEN_RSS_VERSION', '1.1.0.3');
 
 // Load text domain for i18n
 add_action('plugins_loaded', 'zen_rss_load_textdomain');
