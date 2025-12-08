@@ -13,7 +13,7 @@ class Zen_RSS_Generator_Channel
         if (Zen_RSS_Cache_Manager::is_cache_enabled()) {
             $cached = Zen_RSS_Cache_Manager::get_cached_feed('channel');
             if ($cached !== false) {
-                header('Content-Type: application/rss+xml; charset=' . get_option('blog_charset'), true);
+                header('Content-Type: application/rss+xml; charset=UTF-8', true);
                 echo $cached;
                 return;
             }
@@ -22,7 +22,7 @@ class Zen_RSS_Generator_Channel
         // Start output buffering for caching
         ob_start();
 
-        header('Content-Type: application/rss+xml; charset=' . get_option('blog_charset'), true);
+        header('Content-Type: application/rss+xml; charset=UTF-8', true);
         echo '<?xml version="1.0" encoding="' . get_option('blog_charset') . '"?' . '>';
         ?>
         <rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:dc="http://purl.org/dc/elements/1.1/"
