@@ -59,6 +59,10 @@ class Zen_RSS_Text_Cleaner
         // Note: We might want to keep some structure, but strip dangerous tags.
         $content = strip_tags($content, $allowed_tags);
 
+        // Replace <strong> with <b> for consistency
+        $content = preg_replace('/<strong>/i', '<b>', $content);
+        $content = preg_replace('/<\/strong>/i', '</b>', $content);
+
         // Ensure images have absolute URLs (WordPress usually handles this, but good to ensure)
 
         return trim($content);

@@ -161,6 +161,10 @@ class Zen_RSS_Generator_News
         $allowed_tags = '<p><br><b><strong><i><em><u><s><ul><ol><li><blockquote>';
         $content = strip_tags($content, $allowed_tags);
 
+        // Replace <strong> with <b> for consistency
+        $content = preg_replace('/<strong>/i', '<b>', $content);
+        $content = preg_replace('/<\/strong>/i', '</b>', $content);
+
         // Normalize <br> tags to be XML-compliant (self-closing)
         $content = preg_replace('/<br\s*\/?>/i', '<br />', $content);
 
@@ -231,23 +235,32 @@ class Zen_RSS_Generator_News
             // Check extension
             $ext = strtolower(pathinfo($url, PATHINFO_EXTENSION));
 
-            // Accept JPEG/JPG/PNG directly
-            if (in_array($ext, array('jpg', 'jpeg'))) {
+            // Accept JPEG/JPG/PNG/WebP directly
+            if (in_array($ext, array('jpg', 'jpeg', 'png', 'webp'))) {
+                $type = ($ext === 'png') ? 'image/png' : 'image/jpeg';
                 return array(
                     'url' => $url,
-                    'type' => 'image/jpeg',
+                    'type' => $type,
                 );
             }
 
-            if ($ext === 'png') {
-                return array(
-                    'url' => $url,
-                    'type' => 'image/png',
-                );
-            }
+            // If AVIF or other format, try to find JPG/PNG/WebP variant
+            if ($ext === 'avif' || !in_array($ext, array('jpg', 'jpeg', 'png', 'webp'))) {
+                // Try different extensions in order of preference
+                $base_url = preg_replace('/\.[^.]+$/', '', $url); // Remove extension
+                $variants = array('.jpg', '.jpeg', '.png', '.webp');
 
-            // Skip AVIF/WebP - they should not be in OG:image if user configured it correctly
-            // If we encounter them, just skip and try next candidate
+                foreach ($variants as $variant_ext) {
+                    $variant_url = $base_url . $variant_ext;
+                    // We can't check file existence without HTTP request, so just try first variant
+                    // In practice, OG:image should already have the right format
+                    $type = ($variant_ext === '.png') ? 'image/png' : 'image/jpeg';
+                    return array(
+                        'url' => $variant_url,
+                        'type' => $type,
+                    );
+                }
+            }
         }
 
         return null;
