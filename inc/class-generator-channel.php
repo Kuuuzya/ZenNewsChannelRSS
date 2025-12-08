@@ -163,22 +163,77 @@ class Zen_RSS_Generator_Channel
     }
 
     /**
-     * Convert AVIF/WebP images to JPEG in content
+     * Convert AVIF/WebP images to JPEG/PNG/WebP in content
+     * ВАЖНО: Удаляет изображения, если нет подходящей альтернативы
      *
      * @param string $content
      * @return string
      */
     private static function convert_images_to_jpeg($content)
     {
-        // Replace .avif and .webp with .jpg in src attributes
-        $content = preg_replace('/(<img[^>]+src=["\'])([^"\']+\.(avif|webp))(["\'][^>]*>)/i', '$1' . '$2' . '$4', $content);
-        $content = preg_replace('/\.(avif|webp)(["\'][^>]*>)/i', '.jpg$2', $content);
+        // Обрабатываем все <img> теги
+        $content = preg_replace_callback(
+            '/<img\b[^>]*\bsrc=["\']([^"\']+)["\'][^>]*>/i',
+            function ($matches) {
+                $img_tag = $matches[0];
+                $src_url = $matches[1];
 
-        // Replace in href attributes
-        $content = preg_replace('/(<a[^>]+href=["\'])([^"\']+\.(avif|webp))(["\'][^>]*>)/i', '$1' . '$2' . '$4', $content);
-        $content = preg_replace('/(<a[^>]+href=["\'][^"\']+)\.(avif|webp)(["\'])/i', '$1.jpg$3', $content);
+                // Проверяем расширение
+                $ext = strtolower(pathinfo(parse_url($src_url, PHP_URL_PATH), PATHINFO_EXTENSION));
+
+                // Если это не AVIF - оставляем как есть
+                if ($ext !== 'avif') {
+                    return $img_tag;
+                }
+
+                // Пробуем найти альтернативу: WebP, PNG, JPEG
+                $base_url = preg_replace('/\.avif$/i', '', $src_url);
+                $alternatives = array('.webp', '.png', '.jpg', '.jpeg');
+
+                foreach ($alternatives as $alt_ext) {
+                    $alt_url = $base_url . $alt_ext;
+
+                    // Проверяем, существует ли файл (для локальных URL)
+                    if (self::url_file_exists($alt_url)) {
+                        // Заменяем src на найденную альтернативу
+                        return preg_replace(
+                            '/\bsrc=["\'][^"\']+["\']/',
+                            'src="' . esc_url($alt_url) . '"',
+                            $img_tag,
+                            1
+                        );
+                    }
+                }
+
+                // Альтернативы не найдено - удаляем изображение полностью
+                return '<!-- AVIF image removed: no fallback found for ' . esc_html($src_url) . ' -->';
+            },
+            $content
+        );
 
         return $content;
+    }
+
+    /**
+     * Проверяет, существует ли файл по URL (только для локальных uploads)
+     *
+     * @param string $url
+     * @return bool
+     */
+    private static function url_file_exists($url)
+    {
+        $uploads = wp_get_upload_dir();
+        $base_url = trailingslashit($uploads['baseurl']);
+
+        // Проверяем только локальные файлы из uploads
+        if (strpos($url, $base_url) !== 0) {
+            return false;
+        }
+
+        // Конвертируем URL в путь к файлу
+        $file_path = str_replace($base_url, trailingslashit($uploads['basedir']), $url);
+
+        return file_exists($file_path);
     }
 
     /**
