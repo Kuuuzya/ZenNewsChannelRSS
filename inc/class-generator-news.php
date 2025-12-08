@@ -140,52 +140,53 @@ class Zen_RSS_Generator_News
 
     /**
      * Strict content cleaning for Zen News
+     * Clean content for Zen News (yandex:full-text)
+     * Zen требует ЧИСТЫЙ ТЕКСТ без HTML-тегов
      */
     private static function clean_content_strict($content)
     {
-        // Remove shortcodes
-        $content = strip_shortcodes($content);
-
-        // Remove teaser if enabled
-        if (get_option('zen_rss_news_remove_teaser')) {
-            $content = preg_replace('/<p>.*?<\/p>/i', '', $content, 1);
+        if (!$content) {
+            return '';
         }
 
-        // Remove "Read Also" / "Читайте также" blocks (simple heuristics)
-        $content = preg_replace('/<(p|div|strong|b)[^>]*>(Читайте также|Read also|Ещё по теме).*?<\/\1>/iu', '', $content);
+        // Убираем шорткоды
+        $content = strip_shortcodes($content);
 
-        // Strip all tags except allowed text formatting
-        // Zen News full-text should be mostly text.
-        // Allowed: <p>, <br>, <b>, <strong>, <i>, <em>, <u>, <s>, <ul>, <ol>, <li>, <blockquote>
-        // NO IMAGES in full-text for News (they go to enclosure/media)
-        $allowed_tags = '<p><br><b><strong><i><em><u><s><ul><ol><li><blockquote>';
-        $content = strip_tags($content, $allowed_tags);
+        // Убираем скрипты, стили, формы и т.д.
+        $content = preg_replace('/<(script|style|iframe|embed|object|form)[^>]*>.*?<\/\1>/si', '', $content);
 
-        // Replace <strong> with <b> for consistency
-        $content = preg_replace('/<strong>/i', '<b>', $content);
-        $content = preg_replace('/<\/strong>/i', '</b>', $content);
+        // Заменяем заголовки на текст с переводами строк
+        $content = preg_replace('/<h[1-6][^>]*>(.*?)<\/h[1-6]>/si', "\n\n$1\n", $content);
 
-        // Normalize <br> tags to be XML-compliant (self-closing)
-        $content = preg_replace('/<br\s*\/?>/i', '<br />', $content);
+        // Заменяем параграфы на текст с двойным переводом строки
+        $content = preg_replace('/<p[^>]*>(.*?)<\/p>/si', "$1\n\n", $content);
 
-        // Remove empty paragraphs
-        $content = preg_replace('/<p>\s*<\/p>/', '', $content);
+        // Заменяем <br> на перевод строки
+        $content = preg_replace('/<br\s*\/?>/i', "\n", $content);
 
-        // Normalize whitespace: collapse multiple newlines to at most 2
+        // Заменяем списки на текст с переводами строк
+        $content = preg_replace('/<li[^>]*>(.*?)<\/li>/si', "- $1\n", $content);
+        $content = preg_replace('/<\/?[uo]l[^>]*>/i', "\n", $content);
+
+        // Заменяем blockquote на текст с отступом
+        $content = preg_replace('/<blockquote[^>]*>(.*?)<\/blockquote>/si', "\n$1\n", $content);
+
+        // Убираем ВСЕ оставшиеся HTML-теги
+        $content = strip_tags($content);
+
+        // Декодируем HTML-сущности
+        $content = html_entity_decode($content, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+
+        // Нормализуем пробелы: убираем множественные пробелы
+        $content = preg_replace('/[ \t]+/', ' ', $content);
+
+        // Нормализуем переводы строк: максимум 2 подряд
         $content = preg_replace('/\n{3,}/', "\n\n", $content);
 
-        // Final XML escape
-        // Note: We need to preserve HTML tags, so we can't just htmlspecialchars the whole thing.
-        // But the content inside tags should be safe.
-        // Since we stripped tags to a safe list, we assume the remaining tags are valid XML.
-        // However, we should ensure entities are correct.
-
-        // A simple way is to rely on WordPress's ent2ncr or similar, but for now let's return the cleaned HTML.
-        // Ideally we should escape special chars outside of tags, but that's complex without a parser.
-        // We will assume the input content is UTF-8 and mostly safe after strip_tags.
-        // But we MUST escape & < > " ' in the text nodes.
-        // For simplicity in this context, we'll trust strip_tags + standard WP filtering,
-        // but replace standalone & with &amp; if not part of an entity.
+        // Убираем пробелы в начале и конце строк
+        $lines = explode("\n", $content);
+        $lines = array_map('trim', $lines);
+        $content = implode("\n", $lines);
 
         return trim($content);
     }
