@@ -13,7 +13,8 @@ class Zen_RSS_Generator_News
         if (Zen_RSS_Cache_Manager::is_cache_enabled()) {
             $cached = Zen_RSS_Cache_Manager::get_cached_feed('news');
             if ($cached !== false) {
-                header('Content-Type: application/rss+xml; charset=UTF-8', true);
+                header('Content-Type: text/xml; charset=UTF-8', true);
+                header('X-Zen-Feed: cached');
                 echo $cached;
                 return;
             }
@@ -33,8 +34,9 @@ class Zen_RSS_Generator_News
         // Cap at 500 items maximum
         $item_count = min(500, (int) get_option('zen_rss_news_count', 50));
 
-        header('Content-Type: application/rss+xml; charset=UTF-8', true);
-        echo '<?xml version="1.0" encoding="' . get_option('blog_charset') . '"?' . '>';
+        header('Content-Type: text/xml; charset=UTF-8', true);
+        header('X-Zen-Feed: fresh');
+        echo '<?xml version="1.0" encoding="UTF-8"?' . '>';
         ?>
         <rss version="2.0" xmlns:yandex="http://news.yandex.ru" xmlns:media="http://search.yahoo.com/mrss/"
             xmlns:atom="http://www.w3.org/2005/Atom">
