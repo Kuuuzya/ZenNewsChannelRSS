@@ -218,8 +218,13 @@ class Zen_RSS_Generator_Channel
 
         $candidates = array();
 
-        // 1. Open Graph (Yoast / RankMath / Generic)
-        $og_image = get_post_meta($post_id, '_yoast_wpseo_opengraph-image', true); // Yoast
+        // 1. Allow external override via filter (for MU-plugins that add OG:image to HTML)
+        $og_image = apply_filters('zen_rss_og_image', '', $post_id);
+
+        // 2. Open Graph (Yoast / RankMath / Generic)
+        if (!$og_image) {
+            $og_image = get_post_meta($post_id, '_yoast_wpseo_opengraph-image', true); // Yoast
+        }
         if (!$og_image) {
             $og_image = get_post_meta($post_id, 'rank_math_facebook_image', true); // RankMath
         }
@@ -249,7 +254,7 @@ class Zen_RSS_Generator_Channel
         foreach ($candidates as $url) {
             $ext = strtolower(pathinfo($url, PATHINFO_EXTENSION));
 
-            // Accept JPEG/JPG/PNG/WebP directly
+            // Accept JPEG/JPG/PNG/WebP directly - no conversion attempts
             if (in_array($ext, array('jpg', 'jpeg', 'png', 'webp'))) {
                 $type = ($ext === 'png') ? 'image/png' : 'image/jpeg';
                 return array(
@@ -258,23 +263,7 @@ class Zen_RSS_Generator_Channel
                 );
             }
 
-            // If AVIF or other format, try to find JPG/PNG/WebP variant
-            if ($ext === 'avif' || !in_array($ext, array('jpg', 'jpeg', 'png', 'webp'))) {
-                // Try different extensions in order of preference
-                $base_url = preg_replace('/\.[^.]+$/', '', $url); // Remove extension
-                $variants = array('.jpg', '.jpeg', '.png', '.webp');
-
-                foreach ($variants as $variant_ext) {
-                    $variant_url = $base_url . $variant_ext;
-                    // We can't check file existence without HTTP request, so just try first variant
-                    // In practice, OG:image should already have the right format
-                    $type = ($variant_ext === '.png') ? 'image/png' : 'image/jpeg';
-                    return array(
-                        'url' => $variant_url,
-                        'type' => $type,
-                    );
-                }
-            }
+            // Skip anything else (AVIF, etc.) and try next candidate
         }
 
         return null;
