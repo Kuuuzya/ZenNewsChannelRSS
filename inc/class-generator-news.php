@@ -161,6 +161,9 @@ class Zen_RSS_Generator_News
         $allowed_tags = '<p><br><b><strong><i><em><u><s><ul><ol><li><blockquote>';
         $content = strip_tags($content, $allowed_tags);
 
+        // Normalize <br> tags to be XML-compliant (self-closing)
+        $content = preg_replace('/<br\s*\/?>/i', '<br />', $content);
+
         // Remove empty paragraphs
         $content = preg_replace('/<p>\s*<\/p>/', '', $content);
 
