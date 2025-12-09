@@ -79,6 +79,9 @@ class Zen_RSS_Admin
             'zen_rss_custom_content_enable' => 'bool', // New
             'zen_rss_custom_content_html' => 'html', // New
             'zen_rss_custom_content_position' => 'int', // New
+            'zen_rss_custom_content_2_enable' => 'bool', // Second block
+            'zen_rss_custom_content_2_html' => 'html', // Second block
+            'zen_rss_custom_content_2_position' => 'int', // Second block
             'zen_rss_channel_remove_shortcodes' => 'bool',
         );
 

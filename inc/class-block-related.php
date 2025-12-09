@@ -38,7 +38,7 @@ class Zen_RSS_Block_Related
             return '';
         }
 
-        $output = PHP_EOL . '<h4>Ещё по теме:</h4>' . PHP_EOL;
+        $output = PHP_EOL . '<p><b>Ещё по теме:</b></p>' . PHP_EOL;
         $output .= '<ul>' . PHP_EOL;
 
         while ($query->have_posts()) {
