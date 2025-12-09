@@ -99,10 +99,9 @@ class Zen_RSS_Admin
                     update_option($field, esc_url_raw($value));
                     break;
                 case 'bool':
-                    // Checkboxes send '1' if checked, nothing if unchecked.
-                    // Hidden fields send '0'.
-                    // We simply cast to bool.
-                    update_option($field, (bool) $value);
+                    // Checkboxes send '1' if checked, '0' (from hidden field) if unchecked.
+                    // Convert properly: '1' or 1 = true, anything else = false
+                    update_option($field, ($value === '1' || $value === 1));
                     break;
                 case 'html':
                     // Allow safe HTML for custom content
