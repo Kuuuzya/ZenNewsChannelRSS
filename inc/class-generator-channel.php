@@ -114,9 +114,17 @@ class Zen_RSS_Generator_Channel
                         $custom_pos = (int) get_option('zen_rss_custom_content_position', 3);
 
                         if (!empty($custom_html) && class_exists('Zen_RSS_Injector')) {
-                            // We use a slightly different position logic or just reuse the injector
-                            // If related posts are at pos 2, and custom at pos 3, it should work fine sequentially
                             $content_clean = Zen_RSS_Injector::inject($content_clean, $custom_html, $custom_pos);
+                        }
+                    }
+
+                    // Inject Second Custom Content Block
+                    if (get_option('zen_rss_custom_content_2_enable')) {
+                        $custom_html_2 = get_option('zen_rss_custom_content_2_html');
+                        $custom_pos_2 = (int) get_option('zen_rss_custom_content_2_position', 5);
+
+                        if (!empty($custom_html_2) && class_exists('Zen_RSS_Injector')) {
+                            $content_clean = Zen_RSS_Injector::inject($content_clean, $custom_html_2, $custom_pos_2);
                         }
                     }
 

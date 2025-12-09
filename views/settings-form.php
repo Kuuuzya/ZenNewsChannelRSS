@@ -349,6 +349,55 @@
                         </p>
                     </td>
                 </tr>
+                
+                <!-- Second Custom Content Block -->
+                <tr style="border-top: 1px solid #ddd;">
+                    <th scope="row" colspan="2" style="padding-top: 20px;">
+                        <h3><?php _e('Second Custom Content Block', 'zen-news-channel-rss'); ?></h3>
+                    </th>
+                </tr>
+                <tr>
+                    <th scope="row"><?php _e('Enable Second Custom Block', 'zen-news-channel-rss'); ?></th>
+                    <td>
+                        <label class="toggle-switch">
+                            <input type="hidden" name="zen_rss_custom_content_2_enable" value="0" />
+                            <input type="checkbox" name="zen_rss_custom_content_2_enable" value="1" <?php checked(get_option('zen_rss_custom_content_2_enable'), true); ?> />
+                            <span class="toggle-slider"></span>
+                        </label>
+                        <p class="description">
+                            <?php _e('Insert a second custom HTML block into the content.', 'zen-news-channel-rss'); ?>
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row">
+                        <label for="zen_rss_custom_content_2_html"><?php _e('Second Custom HTML Content', 'zen-news-channel-rss'); ?></label>
+                    </th>
+                    <td>
+                        <?php 
+                        $default_promo_2 = '<p>Читайте также наши материалы на <a href="https://itzine.ru">itzine.ru</a></p>';
+                        $custom_content_2 = get_option('zen_rss_custom_content_2_html', $default_promo_2);
+                        ?>
+                        <textarea id="zen_rss_custom_content_2_html" name="zen_rss_custom_content_2_html" rows="5" class="large-text code"><?php echo esc_textarea($custom_content_2); ?></textarea>
+                        <p class="description">
+                            <?php _e('HTML content to insert. Allowed tags: p, a, b, i, strong, em, br.', 'zen-news-channel-rss'); ?>
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row">
+                        <label for="zen_rss_custom_content_2_position"><?php _e('Second Custom Block Position', 'zen-news-channel-rss'); ?></label>
+                    </th>
+                    <td>
+                        <input type="number" id="zen_rss_custom_content_2_position" name="zen_rss_custom_content_2_position"
+                            value="<?php echo esc_attr(get_option('zen_rss_custom_content_2_position', 5)); ?>" min="1" max="20"
+                            class="small-text" />
+                        <p class="description">
+                            <?php _e('After which paragraph to insert the second custom block.', 'zen-news-channel-rss'); ?><br>
+                            <?php _e('Default: 5. If paragraph doesn\'t exist, block appears at the end.', 'zen-news-channel-rss'); ?>
+                        </p>
+                    </td>
+                </tr>
 
                 <tr>
                     <th scope="row"><?php _e('Remove Shortcodes', 'zen-news-channel-rss'); ?></th>

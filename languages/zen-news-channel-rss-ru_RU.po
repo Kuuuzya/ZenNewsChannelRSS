@@ -287,3 +287,24 @@ msgstr "URL для ленты Канала"
 
 msgid "Custom URL path for the Channel feed. Default: \"zen-channel\""
 msgstr "Пользовательский путь URL для ленты канала. По умолчанию: \"zen-channel\""
+
+msgid "Second Custom Content Block"
+msgstr "Второй кастомный блок контента"
+
+msgid "Enable Second Custom Block"
+msgstr "Включить второй кастомный блок"
+
+msgid "Insert a second custom HTML block into the content."
+msgstr "Вставить второй кастомный HTML-блок в контент."
+
+msgid "Second Custom HTML Content"
+msgstr "HTML-контент второго блока"
+
+msgid "Second Custom Block Position"
+msgstr "Позиция второго кастомного блока"
+
+msgid "After which paragraph to insert the second custom block."
+msgstr "После какого абзаца вставить второй кастомный блок."
+
+msgid "Default: 5. If paragraph doesn't exist, block appears at the end."
+msgstr "По умолчанию: 5. Если абзац не существует, блок появится в конце."
