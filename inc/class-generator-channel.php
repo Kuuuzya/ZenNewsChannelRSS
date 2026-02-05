@@ -13,7 +13,7 @@ class Zen_RSS_Generator_Channel
         if (Zen_RSS_Cache_Manager::is_cache_enabled()) {
             $cached = Zen_RSS_Cache_Manager::get_cached_feed('channel');
             if ($cached !== false) {
-                header('Content-Type: text/xml; charset=UTF-8', true);
+                header('Content-Type: application/rss+xml; charset=UTF-8', true);
                 header('X-Zen-Feed: cached');
                 echo $cached;
                 return;
@@ -23,7 +23,7 @@ class Zen_RSS_Generator_Channel
         // Start output buffering for caching
         ob_start();
 
-        header('Content-Type: text/xml; charset=UTF-8', true);
+        header('Content-Type: application/rss+xml; charset=UTF-8', true);
         header('X-Zen-Feed: fresh');
         echo '<?xml version="1.0" encoding="UTF-8"?' . '>';
         ?>

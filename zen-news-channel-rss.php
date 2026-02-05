@@ -23,6 +23,7 @@ function zen_rss_load_textdomain()
     load_plugin_textdomain('zen-news-channel-rss', false, dirname(plugin_basename(__FILE__)) . '/languages');
 }
 
+
 // Include required files
 require_once ZEN_RSS_PATH . 'admin/settings-page.php';
 require_once ZEN_RSS_PATH . 'inc/class-cache-manager.php';
