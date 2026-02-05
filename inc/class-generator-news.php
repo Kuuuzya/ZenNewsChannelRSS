@@ -21,7 +21,7 @@ class Zen_RSS_Generator_News
         }
 
         // Start output buffering for caching
-        ob_start();
+        
 
         // Strict 8 days limit for News
         $max_days = 8;
@@ -37,6 +37,7 @@ class Zen_RSS_Generator_News
         header('Content-Type: application/rss+xml; charset=UTF-8', true);
         header('X-Zen-Feed: fresh');
         echo '<?xml version="1.0" encoding="UTF-8"?' . '>';
+		ob_start();
         ?>
         <rss version="2.0" xmlns:yandex="http://news.yandex.ru" xmlns:media="http://search.yahoo.com/mrss/"
             xmlns:atom="http://www.w3.org/2005/Atom">
