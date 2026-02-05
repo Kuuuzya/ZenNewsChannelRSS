@@ -34,10 +34,10 @@ class Zen_RSS_Generator_News
         // Cap at 500 items maximum
         $item_count = min(500, (int) get_option('zen_rss_news_count', 50));
 
+        ob_start();
         header('Content-Type: application/rss+xml; charset=UTF-8', true);
         header('X-Zen-Feed: fresh');
         echo '<?xml version="1.0" encoding="UTF-8"?' . '>';
-		ob_start();
         ?>
         <rss version="2.0" xmlns:yandex="http://news.yandex.ru" xmlns:media="http://search.yahoo.com/mrss/"
             xmlns:atom="http://www.w3.org/2005/Atom">

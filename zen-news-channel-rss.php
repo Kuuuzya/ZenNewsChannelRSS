@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Zen News&Channel RSS
  * Description: Generates two independent RSS feeds for Yandex Zen (News and Channel) with a comprehensive admin interface.
- * Version:           1.1.1
+ * Version:           1.1.1.2
  * Author: Sergey Kuznetsov (Kuuuzya)
  * Text Domain: zen-news-channel-rss
  * Domain Path: /languages
@@ -14,7 +14,7 @@ if (!defined('ABSPATH')) {
 
 define('ZEN_RSS_PATH', plugin_dir_path(__FILE__));
 define('ZEN_RSS_URL', plugin_dir_url(__FILE__));
-define('ZEN_RSS_VERSION', '1.1.1');
+define('ZEN_RSS_VERSION', '1.1.1.2');
 
 // Load text domain for i18n
 add_action('plugins_loaded', 'zen_rss_load_textdomain');
@@ -23,6 +23,14 @@ function zen_rss_load_textdomain()
     load_plugin_textdomain('zen-news-channel-rss', false, dirname(plugin_basename(__FILE__)) . '/languages');
 }
 
+// Add Settings link to plugins list
+add_filter('plugin_action_links_' . plugin_basename(__FILE__), 'zen_rss_add_settings_link');
+function zen_rss_add_settings_link($links)
+{
+    $settings_link = '<a href="' . admin_url('admin.php?page=zen-rss-settings') . '">' . __('Settings', 'zen-news-channel-rss') . '</a>';
+    array_unshift($links, $settings_link);
+    return $links;
+}
 
 // Include required files
 require_once ZEN_RSS_PATH . 'admin/settings-page.php';
