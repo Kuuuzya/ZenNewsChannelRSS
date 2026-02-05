@@ -37,7 +37,6 @@ class Zen_RSS_Generator_News
         // Set headers before any output
         header('Content-Type: application/rss+xml; charset=UTF-8', true);
         header('X-Zen-Feed: fresh');
-
         ob_start();
         echo '<?xml version="1.0" encoding="UTF-8"?' . '>';
         ?>
