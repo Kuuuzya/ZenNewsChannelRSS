@@ -70,6 +70,25 @@ function zen_rss_init()
 }
 
 /**
+ * Force correct Content-Type for our feeds
+ */
+add_action('template_redirect', 'zen_rss_force_content_type');
+function zen_rss_force_content_type()
+{
+    if (!is_feed()) {
+        return;
+    }
+
+    $news_slug = get_option('zen_rss_news_slug', 'zen-news');
+    $channel_slug = get_option('zen_rss_channel_slug', 'zen-channel');
+
+    // Check if this is one of our feeds
+    if (get_query_var('feed') === $news_slug || get_query_var('feed') === $channel_slug) {
+        header('Content-Type: application/rss+xml; charset=UTF-8', true);
+    }
+}
+
+/**
  * Add feed rewrite rules
  */
 function zen_rss_add_feed_rules()

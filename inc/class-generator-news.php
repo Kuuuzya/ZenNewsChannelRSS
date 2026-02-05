@@ -9,11 +9,13 @@ class Zen_RSS_Generator_News
             return;
         }
 
+        // Set Content-Type as early as possible
+        header('Content-Type: application/rss+xml; charset=UTF-8', true);
+
         // Check cache first (if enabled)
         if (Zen_RSS_Cache_Manager::is_cache_enabled()) {
             $cached = Zen_RSS_Cache_Manager::get_cached_feed('news');
             if ($cached !== false) {
-                header('Content-Type: application/rss+xml; charset=UTF-8', true);
                 header('X-Zen-Feed: cached');
                 echo $cached;
                 return;
@@ -34,8 +36,7 @@ class Zen_RSS_Generator_News
         // Cap at 500 items maximum
         $item_count = min(500, (int) get_option('zen_rss_news_count', 50));
 
-        // Set headers before any output
-        header('Content-Type: application/rss+xml; charset=UTF-8', true);
+        // Set headers before any output (reinforced)
         header('X-Zen-Feed: fresh');
         ob_start();
         echo '<?xml version="1.0" encoding="UTF-8"?' . '>';
